@@ -13,12 +13,13 @@ using System.Runtime.InteropServices;
 using NFCoreEx;
 using NFMsg;
 using ProtoBuf;
+using PlayerNetClient;
 
 public class NFStart : MonoBehaviour
 {
     //看开启多人模式还是单人模式
     NFConfig mConfig = null;
-    NFNet mxNetFocus = null;
+    PlayerNet mxPlayerNet = null;
     string strTargetIP = "";
     int nPort = 0;
     public bool bCommand = false;
@@ -26,31 +27,31 @@ public class NFStart : MonoBehaviour
 
     public Transform[] mTrans;
 
-    public NFNet GetFocusNet()
+    public PlayerNet GetPlayerNet()
     {
-        return mxNetFocus;
+        return mxPlayerNet;
     }
 
-    public void SetFocusNet(NFNet xNet)
+    public void SetFocusNet(PlayerNet xNet)
     {
-        mxNetFocus = xNet;
+        mxPlayerNet = xNet;
     }
 
-    public NFBinarySendLogic GetFocusSender()
+    public PlayerSender GetFocusSender()
     {
-        if (null != mxNetFocus)
+        if (null != mxPlayerNet)
         {
-            return mxNetFocus.mxSendLogic;
+            return mxPlayerNet.mxSender;
         }
 
         return null;
     }
 
-    public NFCoreExListener GetFocusListener()
+    public PlayerReciver GetFocusListener()
     {
-        if (null != mxNetFocus)
+        if (null != mxPlayerNet)
         {
-            return mxNetFocus.mxListener;
+            return mxPlayerNet.mxReciver;
         }
 
         return null;
@@ -101,76 +102,76 @@ public class NFStart : MonoBehaviour
     void OnDestroy()
     {
 
-        if (null != mxNetFocus)
+        if (null != mxPlayerNet)
         {
-            mxNetFocus.Destroy();
+            mxPlayerNet.mxNet.Disconnect();
         }
     }
 
     void OnGUI()
     {
 
-        if (null != mxNetFocus)
+        if (null != mxPlayerNet)
         {
-            mxNetFocus.Update();
-            mxNetFocus.OnGUI(1024, 768);
+//             mxPlayerNet.Update();
+//             mxPlayerNet.OnGUI(1024, 768);
         }
 
-        if (null != mxNetFocus)
+        if (null != mxPlayerNet)
         {
-            switch (mxNetFocus.mPlayerState)
+            switch (mxPlayerNet.mPlayerState)
             {
-                case NFNet.PLAYER_STATE.E_NONE:
+                case PlayerNet.PLAYER_STATE.E_NONE:
                     {
                         if (strTargetIP.Length > 0)
                         {
-                            mxNetFocus.StartConnect(strTargetIP, nPort);
-                            mxNetFocus.mPlayerState = NFNet.PLAYER_STATE.E_WAITING_PLAYER_LOGIN;
+                            mxPlayerNet.mxNet.StartConnect(strTargetIP, nPort);
+                            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_WAITING_PLAYER_LOGIN;
                         }
                     }
 
                     break;
-                case NFNet.PLAYER_STATE.E_WAITING_PLAYER_LOGIN:
+                case PlayerNet.PLAYER_STATE.E_WAITING_PLAYER_LOGIN:
                     {
-                        if (mxNetFocus.strKey.Length > 0)
+                        if (mxPlayerNet.strKey.Length > 0)
                         {
-                            mxNetFocus.mPlayerState = NFNet.PLAYER_STATE.E_HAS_PLAYER_GATE;
+                            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_HAS_PLAYER_GATE;
                         }
                         else
                         {
-                            mxNetFocus.strAccount = GUI.TextField(new Rect(10, 10, 150, 50), mxNetFocus.strAccount);
-                            mxNetFocus.strPassword = GUI.TextField(new Rect(10, 100, 150, 50), mxNetFocus.strPassword);
+                            mxPlayerNet.strAccount = GUI.TextField(new Rect(10, 10, 150, 50), mxPlayerNet.strAccount);
+                            mxPlayerNet.strPassword = GUI.TextField(new Rect(10, 100, 150, 50), mxPlayerNet.strPassword);
                             if (GUI.Button (new Rect (10, 200, 150, 50), "Login"))
                             {
-                                mxNetFocus.mxSendLogic.LoginPB(mxNetFocus.strAccount, mxNetFocus.strPassword, "");
+                                mxPlayerNet.mxSender.LoginPB(mxPlayerNet.strAccount, mxPlayerNet.strPassword, "");
                             }
                         }
                     }
                     break;
 
-                case NFNet.PLAYER_STATE.E_HAS_PLAYER_LOGIN:
+                case PlayerNet.PLAYER_STATE.E_HAS_PLAYER_LOGIN:
                     {
                         int nHeight = 50;
-                        for (int i = 0; i < mxNetFocus.mxListener.aWorldList.Count; ++i )
+                        for (int i = 0; i < mxPlayerNet.mxReciver.aWorldList.Count; ++i )
                         {
-                            ServerInfo xInfo = (ServerInfo)mxNetFocus.mxListener.aWorldList[i];
+                            ServerInfo xInfo = (ServerInfo)mxPlayerNet.mxReciver.aWorldList[i];
                             if (GUI.Button(new Rect(10, i * nHeight, 150, nHeight), System.Text.Encoding.Default.GetString(xInfo.name)))
                             {
-                                NFStart.Instance.GetFocusNet().nServerID = xInfo.server_id;
-                                mxNetFocus.mxSendLogic.RequireConnectWorld(xInfo.server_id);
+                                NFStart.Instance.GetPlayerNet().nServerID = xInfo.server_id;
+                                mxPlayerNet.mxSender.RequireConnectWorld(xInfo.server_id);
                             }
                         }
                     }
                     break;
 
-                case NFNet.PLAYER_STATE.E_WAITING_PLAYER_TO_GATE:
+                case PlayerNet.PLAYER_STATE.E_WAITING_PLAYER_TO_GATE:
                     {
-                        string strWorpdIP = NFStart.Instance.GetFocusNet().strWorldIP;
-                        string strWorpdKey = NFStart.Instance.GetFocusNet().strKey;
-                        string strAccount = NFStart.Instance.GetFocusNet().strKey;
-                        int nPort = NFStart.Instance.GetFocusNet().nWorldPort;
+                        string strWorpdIP = NFStart.Instance.GetPlayerNet().strWorldIP;
+                        string strWorpdKey = NFStart.Instance.GetPlayerNet().strKey;
+                        string strAccount = NFStart.Instance.GetPlayerNet().strKey;
+                        int nPort = NFStart.Instance.GetPlayerNet().nWorldPort;
 
-                        NFNet xNet = new NFNet();
+                        PlayerNet xNet = new PlayerNet();
 #if UNITY_EDITOR
                         if (strWorpdIP == "127.0.0.1")
                         {
@@ -182,61 +183,61 @@ public class NFStart : MonoBehaviour
                         xNet.strAccount = strAccount;
                         xNet.nWorldPort = nPort;
 
-                        xNet.mPlayerState = NFNet.PLAYER_STATE.E_START_CONNECT_TO_GATE;
-                        xNet.StartConnect(xNet.strWorldIP, nPort);
+                        xNet.mPlayerState = PlayerNet.PLAYER_STATE.E_START_CONNECT_TO_GATE;
+                        xNet.mxNet.StartConnect(xNet.strWorldIP, nPort);
                         NFStart.Instance.SetFocusNet(xNet);
                     }
                     break;
-                case NFNet.PLAYER_STATE.E_HAS_PLAYER_GATE:
+                case PlayerNet.PLAYER_STATE.E_HAS_PLAYER_GATE:
                     {
-                        NFStart.Instance.GetFocusNet().mxSendLogic.RequireVerifyWorldKey(NFStart.Instance.GetFocusNet().strAccount, NFStart.Instance.GetFocusNet().strKey);
-                        NFStart.Instance.GetFocusNet().mPlayerState = NFNet.PLAYER_STATE.E_WATING_VERIFY;
+                        NFStart.Instance.GetPlayerNet().mxSender.RequireVerifyWorldKey(NFStart.Instance.GetPlayerNet().strAccount, NFStart.Instance.GetPlayerNet().strKey);
+                        NFStart.Instance.GetPlayerNet().mPlayerState = PlayerNet.PLAYER_STATE.E_WATING_VERIFY;
                     }
                     break;
-                case NFNet.PLAYER_STATE.E_HAS_VERIFY:
+                case PlayerNet.PLAYER_STATE.E_HAS_VERIFY:
                     {
 
                         int nWidth = 200;
-                        for (int i = 0; i < mxNetFocus.mxListener.aServerList.Count; ++i)
+                        for (int i = 0; i < mxPlayerNet.mxReciver.aServerList.Count; ++i)
                         {
-                            ServerInfo xInfo = (ServerInfo)mxNetFocus.mxListener.aServerList[i];
+                            ServerInfo xInfo = (ServerInfo)mxPlayerNet.mxReciver.aServerList[i];
                             if (GUI.Button(new Rect(nWidth, i * 50, 150, 50), System.Text.Encoding.Default.GetString(xInfo.name)))
                             {
-                                NFStart.Instance.GetFocusNet().nServerID = xInfo.server_id;
+                                NFStart.Instance.GetPlayerNet().nServerID = xInfo.server_id;
                                 NFStart.Instance.GetFocusSender().RequireSelectServer(xInfo.server_id);
                             }
                         }
                     }
                     break;
 
-                case NFNet.PLAYER_STATE.E_HAS_PLAYER_ROLELIST:
+                case PlayerNet.PLAYER_STATE.E_HAS_PLAYER_ROLELIST:
                     {
-                        if (mxNetFocus.mxListener.aCharList.Count > 0)
+                        if (mxPlayerNet.mxReciver.aCharList.Count > 0)
                         {
-                            for (int i = 0; i < mxNetFocus.mxListener.aCharList.Count; ++i)
+                            for (int i = 0; i < mxPlayerNet.mxReciver.aCharList.Count; ++i)
                             {
-                                NFMsg.RoleLiteInfo xLiteInfo = (NFMsg.RoleLiteInfo)mxNetFocus.mxListener.aCharList[i];
+                                NFMsg.RoleLiteInfo xLiteInfo = (NFMsg.RoleLiteInfo)mxPlayerNet.mxReciver.aCharList[i];
                                 if (GUI.Button(new Rect(200, i * 50, 150, 50), System.Text.Encoding.Default.GetString(xLiteInfo.noob_name)))
                                 {
-                                    mxNetFocus.strRoleName = System.Text.Encoding.Default.GetString(xLiteInfo.noob_name);
-                                    NFStart.Instance.GetFocusNet().nMainRoleID = NFTCPClient.NFCoreExListener.PBToNF(xLiteInfo.id);
-                                    mxNetFocus.mxSendLogic.RequireEnterGameServer(NFStart.Instance.GetFocusNet().nMainRoleID, mxNetFocus.strAccount, mxNetFocus.strRoleName, mxNetFocus.nServerID);
+                                    mxPlayerNet.strRoleName = System.Text.Encoding.Default.GetString(xLiteInfo.noob_name);
+                                    NFStart.Instance.GetPlayerNet().nMainRoleID = PlayerReciver.PBToNF(xLiteInfo.id);
+                                    mxPlayerNet.mxSender.RequireEnterGameServer(NFStart.Instance.GetPlayerNet().nMainRoleID, mxPlayerNet.strAccount, mxPlayerNet.strRoleName, mxPlayerNet.nServerID);
                                 }
                             }
                             
                         }
                         else
                         {
-                            mxNetFocus.strRoleName = GUI.TextField(new Rect(10, 10, 150, 50), mxNetFocus.strRoleName);
+                            mxPlayerNet.strRoleName = GUI.TextField(new Rect(10, 10, 150, 50), mxPlayerNet.strRoleName);
                             if (GUI.Button(new Rect(10, 200, 150, 50), "CreateRole"))
                             {
-                                mxNetFocus.mxSendLogic.RequireCreateRole(mxNetFocus.strAccount, mxNetFocus.strRoleName, 0, 0, mxNetFocus.nServerID);
+                                mxPlayerNet.mxSender.RequireCreateRole(mxPlayerNet.strAccount, mxPlayerNet.strRoleName, 0, 0, mxPlayerNet.nServerID);
                             }
                         }
                     }
                     break;
 
-                case NFNet.PLAYER_STATE.E_PLAYER_GAMEING:
+                case PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING:
                     //NFCSectionManager.Instance.SetGameState(NFCSectionManager.UI_SECTION_STATE.UISS_GAMEING);
                     break;
 
@@ -247,7 +248,7 @@ public class NFStart : MonoBehaviour
         }
         else
         {
-            mxNetFocus = new NFNet();
+            mxPlayerNet = new PlayerNet();
         }
     }
 }
