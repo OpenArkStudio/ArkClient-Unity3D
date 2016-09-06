@@ -27,8 +27,12 @@ namespace NFCoreEx
 			}
 		}
 
+        public override void RemoveCallback(NFIEvent.EventHandler handler)
+        {
+            mHandlerDel -= handler;
+        }
 
-		NFIDENTID mSelf;
+        NFIDENTID mSelf;
 		int mnEventID;
 		NFIDataList mArgValueList;
 

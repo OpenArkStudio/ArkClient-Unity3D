@@ -35,7 +35,22 @@ namespace NFCoreEx
 			}
 		}
 
-		NFIDENTID mSelf;
+        public override void RemoveCallback(int nEventID, NFIEvent.EventHandler handler, NFIDataList valueList)
+        {
+            if (!mhtEvent.ContainsKey(nEventID))
+            {
+                return;
+            }
+
+            NFIEvent identEvent = (NFIEvent)mhtEvent[nEventID];
+            if (null != identEvent)
+            {
+                identEvent.RemoveCallback(handler);
+            }
+        }
+
+
+        NFIDENTID mSelf;
         Dictionary<int, NFIEvent> mhtEvent;
     }
 }

@@ -11,5 +11,7 @@ namespace NFCoreEx
 
 		public abstract void RegisterCallback(NFIEvent.EventHandler handler);
 		public abstract void DoEvent(NFIDataList valueList);
+        public abstract void RemoveCallback(NFIEvent.EventHandler handler);
 	}
+
 }
