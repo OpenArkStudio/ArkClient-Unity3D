@@ -24,6 +24,7 @@ public class NFStart : MonoBehaviour
     int nPort = 0;
     public bool bCommand = false;
     public bool bDebugMode = false;
+    public NFObjectElement  mxObjectElement = new NFObjectElement();
 
     public Transform[] mTrans;
 
@@ -111,10 +112,10 @@ public class NFStart : MonoBehaviour
     void OnGUI()
     {
 
-        if (null != mxPlayerNet)
+        if (null != mxPlayerNet && mxPlayerNet.mPlayerState == PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING)
         {
-//             mxPlayerNet.Update();
-//             mxPlayerNet.OnGUI(1024, 768);
+            mxObjectElement.OnGUI(NFCKernel.Instance, 1024, 768);
+            mxObjectElement.OnOpratorGUI(1024, 768);
         }
 
         if (null != mxPlayerNet)

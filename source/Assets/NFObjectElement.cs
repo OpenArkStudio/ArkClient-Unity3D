@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using NFCoreEx;
+using PlayerNetClient;
 
 public class NFObjectElement
 {
@@ -14,8 +15,24 @@ public class NFObjectElement
 	private Vector2 scrollPositionFirst = Vector2.zero;
 	private Vector2 scrollPositionSecond = Vector2.zero;
 	private Vector2 scrollPositionThird = Vector2.zero;
-	
-	GUIStyle buttonLeft;
+
+
+    /// <summary>
+    /// ///Gm
+    /// </summary>
+    /// 
+    Vector2 scrollVecChatMsg = new Vector2();
+    Vector2 scrollVecBtn = new Vector2();
+    private string strReqSwapSceneID = "";
+    private string strReqMoveX = "";
+    private string strReqMoveY = "";
+    private string strReqSwapServerID = "";
+    public string strChatTargetID = "target";
+    public string strType = "0";
+    public string strChatData = "data";
+
+
+    GUIStyle buttonLeft;
     public void OnGUI(NFIKernel kernel, int nHeight, int nWidth)
 	{
 		if (buttonLeft == null)
@@ -236,4 +253,62 @@ public class NFObjectElement
 		
 
 	}
+
+    public void OnOpratorGUI(int nHeight, int nWidth)
+    {
+        //////////////////////////////////
+
+        if (null != NFStart.Instance.GetPlayerNet()
+            && null != NFStart.Instance.GetPlayerNet().mxNet
+            && null != NFStart.Instance.GetPlayerNet().mxReciver
+            && null != NFStart.Instance.GetPlayerNet().mxSender
+            && NFStart.Instance.GetPlayerNet().mPlayerState == PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING)
+        {
+
+            ////聊天
+            scrollVecChatMsg = GUI.BeginScrollView(new Rect(0, nHeight / 2 + 20, 150 * 1.5f + 40, nHeight / 2 - 40), scrollVecChatMsg, new Rect(0, 0, 1500, 3000));
+            int nChatIndex = 0;
+            for (int i = NFStart.Instance.GetPlayerNet().mxReciver.aChatMsgList.Count - 1; i >= 0 ; i--)
+            {
+                string strData = (string)NFStart.Instance.GetPlayerNet().mxReciver.aChatMsgList[i];
+                GUI.Label(new Rect(0, nChatIndex * 20, 2000, 20), strData);
+                nChatIndex++;
+            }
+
+            GUI.EndScrollView();
+         
+
+            //操作功能区
+            scrollVecBtn = GUI.BeginScrollView(new Rect(570, 20, 350, nHeight-40), scrollVecBtn, new Rect(0, 0, 600, 3000));
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////
+
+            if (GUI.Button(new Rect(0, 0, 100, 50), "SwapScene"))
+            {
+                NFStart.Instance.GetPlayerNet().mxSender.RequireSwapScene(NFStart.Instance.GetPlayerNet().nMainRoleID, 0, int.Parse(strReqSwapSceneID), -1);
+            }
+            strReqSwapSceneID = GUI.TextField(new Rect(100, 0, 100, 50), strReqSwapSceneID);
+        
+            ////////////////////////////////////////////////////////////////////////////////////////////////
+            if (GUI.Button(new Rect(0, 50, 100, 50), "Move"))
+            {
+                NFStart.Instance.GetPlayerNet().mxSender.RequireMove(NFStart.Instance.GetPlayerNet().nMainRoleID, float.Parse(strReqMoveX), float.Parse(strReqMoveY));
+            }
+            strReqMoveX = GUI.TextField(new Rect(100, 50, 100, 50), strReqMoveX);
+            strReqMoveY = GUI.TextField(new Rect(200, 50, 100, 50), strReqMoveY);
+
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////
+
+            if (GUI.Button(new Rect(0, 450, 100, 50), "Chat"))
+            {
+                NFStart.Instance.GetPlayerNet().mxSender.RequireChat(NFStart.Instance.GetPlayerNet().nMainRoleID, new NFCoreEx.NFIDENTID(), 3, strChatData);
+            }
+            strChatTargetID = NFStart.Instance.GetPlayerNet().nTarget.ToString();
+            strChatData = GUI.TextField(new Rect(100, 450, 100, 50), strChatData);
+
+            strReqSwapServerID = GUI.TextField(new Rect(100, 500, 100, 50), strReqSwapServerID);
+            GUI.EndScrollView();
+        }
+    }
 }
