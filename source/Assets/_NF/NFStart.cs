@@ -112,106 +112,150 @@ public class NFStart : MonoBehaviour
     void OnGUI()
     {
 
-        if (null != mxPlayerNet && mxPlayerNet.mPlayerState == PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING)
+        if (null != GetPlayerNet() && mxPlayerNet.GetPlayerState() == PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING)
         {
             mxObjectElement.OnGUI(NFCKernel.Instance, 1024, 768);
             mxObjectElement.OnOpratorGUI(1024, 768);
         }
 
-        if (null != mxPlayerNet)
+        if (null != GetPlayerNet())
         {
-            switch (mxPlayerNet.mPlayerState)
+            switch (GetPlayerNet().GetPlayerState())
             {
                 case PlayerNet.PLAYER_STATE.E_NONE:
                     {
                         if (strTargetIP.Length > 0)
                         {
                             mxPlayerNet.mxNet.StartConnect(strTargetIP, nPort);
-                            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_WAITING_PLAYER_LOGIN;
+                            mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_WAITING_CONNET_NET);
                         }
                     }
 
                     break;
-                case PlayerNet.PLAYER_STATE.E_WAITING_PLAYER_LOGIN:
+                case PlayerNet.PLAYER_STATE.E_WAITING_CONNET_NET:
                     {
-                        if (mxPlayerNet.strKey.Length > 0)
+                       // Wait Reciving Connect event ,when connect sucessful ,enter status :E_CONNET_NET_SUCESS_WAITING_ACCOUNT
+                    }
+
+                    break;
+                case PlayerNet.PLAYER_STATE.E_CONNET_NET_SUCESS_WAITING_ACCOUNT:
+                    {
+                        // wait user input account;
+                        mxPlayerNet.strAccount = GUI.TextField(new Rect(10, 10, 150, 50), mxPlayerNet.strAccount);
+                        mxPlayerNet.strPassword = GUI.TextField(new Rect(10, 100, 150, 50), mxPlayerNet.strPassword);
+                        if (GUI.Button(new Rect(10, 200, 150, 50), "Login"))
                         {
-                            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_HAS_PLAYER_GATE;
-                        }
-                        else
-                        {
-                            mxPlayerNet.strAccount = GUI.TextField(new Rect(10, 10, 150, 50), mxPlayerNet.strAccount);
-                            mxPlayerNet.strPassword = GUI.TextField(new Rect(10, 100, 150, 50), mxPlayerNet.strPassword);
-                            if (GUI.Button (new Rect (10, 200, 150, 50), "Login"))
-                            {
-                                mxPlayerNet.mxSender.LoginPB(mxPlayerNet.strAccount, mxPlayerNet.strPassword, "");
-                            }
+                            mxPlayerNet.mxSender.LoginPB(mxPlayerNet.strAccount, mxPlayerNet.strPassword, "");
+                            mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_LOGINING_WAITING_lOGINRESULT);
                         }
                     }
                     break;
-
-                case PlayerNet.PLAYER_STATE.E_HAS_PLAYER_LOGIN:
+                case PlayerNet.PLAYER_STATE.E_PLAYER_LOGINING_WAITING_lOGINRESULT:
                     {
+                        // wait receiving msg EGMI_ACK_LOGIN, when receiving this msg,if receiving error result , show a error,and enter E_CONNET_NET_SUCESS_WAITING_ACCOUNT  status
+                        // if login successful, enter E_PLAYER_LOGIN_SUCCESSFUL_WAITING_WORLD_LIST  status
+                    }
+                    break;
+                case PlayerNet.PLAYER_STATE.E_PLAYER_LOGIN_SUCCESSFUL:
+                    {
+                        // if login successful, enter E_PLAYER_LOGIN_SUCCESSFUL_WAITING_WORLD_LIST  status
+                        PlayerSender sender = mxPlayerNet.mxSender;
+                        if (null != sender)
+                        {
+                            mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_WAITING_WORLD_LIST);
+                            sender.RequireWorldList();
+                        }
+                    }
+                    break;
+                case PlayerNet.PLAYER_STATE.E_PLAYER_WAITING_WORLD_LIST:
+                    {
+                        // wait receiving msg EGMI_ACK_WORLD_LIST, when receiving this msg,if receiving error result , show a error,and enter E_CONNET_NET_SUCESS_WAITING_ACCOUNT  status
+                        // if successful, enter E_PLAYER_WORLD_LIST_SUCCESSFUL_WAITING_SELECT_WORLD  status
+                    }
+                    break;
+                case PlayerNet.PLAYER_STATE.E_PLAYER_WORLD_LIST_SUCCESSFUL_WAITING_SELECT_WORLD:
+                    {
+                        // show world list 
+                        // wait user select world;
                         int nHeight = 50;
-                        for (int i = 0; i < mxPlayerNet.mxReciver.aWorldList.Count; ++i )
+                        for (int i = 0; i < mxPlayerNet.mxReciver.aWorldList.Count; ++i)
                         {
                             ServerInfo xInfo = (ServerInfo)mxPlayerNet.mxReciver.aWorldList[i];
                             if (GUI.Button(new Rect(10, i * nHeight, 150, nHeight), System.Text.Encoding.Default.GetString(xInfo.name)))
                             {
                                 NFStart.Instance.GetPlayerNet().nServerID = xInfo.server_id;
                                 mxPlayerNet.mxSender.RequireConnectWorld(xInfo.server_id);
+                                mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_SELECT_WORLD_WAIT_WORK_KEY);
                             }
                         }
                     }
                     break;
-
-                case PlayerNet.PLAYER_STATE.E_WAITING_PLAYER_TO_GATE:
+                case PlayerNet.PLAYER_STATE.E_PLAYER_GET_WORLD_KEY_SUCCESSFUL:
                     {
                         string strWorpdIP = NFStart.Instance.GetPlayerNet().strWorldIP;
                         string strWorpdKey = NFStart.Instance.GetPlayerNet().strKey;
                         string strAccount = NFStart.Instance.GetPlayerNet().strKey;
                         int nPort = NFStart.Instance.GetPlayerNet().nWorldPort;
 
-                        PlayerNet xNet = new PlayerNet();
-#if UNITY_EDITOR
-                        if (strWorpdIP == "127.0.0.1")
-                        {
-                            strWorpdIP = strTargetIP;
-                        }
-#endif
-                        xNet.strWorldIP = strWorpdIP;
-                        xNet.strKey = strWorpdKey;
-                        xNet.strAccount = strAccount;
-                        xNet.nWorldPort = nPort;
+                        PlayerNet xPlayerNet = new PlayerNet();
+                        xPlayerNet.strWorldIP = strWorpdIP;
+                        xPlayerNet.strKey = strWorpdKey;
+                        xPlayerNet.strAccount = strAccount;
+                        xPlayerNet.nWorldPort = nPort;
 
-                        xNet.mPlayerState = PlayerNet.PLAYER_STATE.E_START_CONNECT_TO_GATE;
-                        xNet.mxNet.StartConnect(xNet.strWorldIP, nPort);
-                        NFStart.Instance.SetFocusNet(xNet);
+                        xPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_START_CONNECT_TO_GATE);
+
+                        xPlayerNet.mxNet.RegisteredConnectDelegation(OnGateConnect);
+                        xPlayerNet.mxNet.RegisteredDisConnectDelegation(OnGateDisConnect);
+                        xPlayerNet.mxNet.StartConnect(xPlayerNet.strWorldIP, nPort);
+                        SetFocusNet(xPlayerNet);
                     }
                     break;
-                case PlayerNet.PLAYER_STATE.E_HAS_PLAYER_GATE:
+                case PlayerNet.PLAYER_STATE.E_START_CONNECT_TO_GATE_SUCESS_FUL:
                     {
-                        NFStart.Instance.GetPlayerNet().mxSender.RequireVerifyWorldKey(NFStart.Instance.GetPlayerNet().strAccount, NFStart.Instance.GetPlayerNet().strKey);
-                        NFStart.Instance.GetPlayerNet().mPlayerState = PlayerNet.PLAYER_STATE.E_WATING_VERIFY;
+                        GetPlayerNet().mxSender.RequireVerifyWorldKey(GetPlayerNet().strAccount, GetPlayerNet().strKey);
+                        GetPlayerNet().ChangePlayerState(PlayerNet.PLAYER_STATE.E_WATING_VERIFY);
                     }
                     break;
-                case PlayerNet.PLAYER_STATE.E_HAS_VERIFY:
+                case PlayerNet.PLAYER_STATE.E_WATING_VERIFY:
                     {
-
+                        //wait receiving msg EGMI_ACK_CONNECT_KEY, if receive failed ,show error  enter none status
+                        //if have receiving  successful Enter E_VERIFY_KEY_SUCCESS_FULL status;
+                    }
+                    break;
+                case PlayerNet.PLAYER_STATE.E_VERIFY_KEY_SUCCESS_FULL:
+                    {   
+                        // wait user select server;
                         int nWidth = 200;
                         for (int i = 0; i < mxPlayerNet.mxReciver.aServerList.Count; ++i)
                         {
                             ServerInfo xInfo = (ServerInfo)mxPlayerNet.mxReciver.aServerList[i];
                             if (GUI.Button(new Rect(nWidth, i * 50, 150, 50), System.Text.Encoding.Default.GetString(xInfo.name)))
                             {
-                                NFStart.Instance.GetPlayerNet().nServerID = xInfo.server_id;
-                                NFStart.Instance.GetFocusSender().RequireSelectServer(xInfo.server_id);
+                                GetPlayerNet().nServerID = xInfo.server_id;
+                                GetFocusSender().RequireSelectServer(xInfo.server_id);
+                                GetPlayerNet().ChangePlayerState(PlayerNet.PLAYER_STATE.E_WAIT_ROLELIST);
                             }
                         }
                     }
                     break;
+                case PlayerNet.PLAYER_STATE.E_WAIT_ROLELIST:
+                    {
+                        // wait receiving EGMI_ACK_SELECT_SERVER msg, 
+                        // when receiving this msg, send req role list;
+                        // and waiting EGMI_ACK_ROLE_LIST msg, if sucessful ,enter E_HAS_PLAYER_ROLELIST status;
+                        
+                    }
+                    break;
+                case PlayerNet.PLAYER_STATE.E_GETROLELIST_SUCCESSFUL:
+                    {
+                        //NFCRenderInterface.Instance.LoadScene("SelectScene");
+                        GetPlayerNet().ChangePlayerState(PlayerNet.PLAYER_STATE.E_WAIT_SELECT_ROLE);
 
-                case PlayerNet.PLAYER_STATE.E_HAS_PLAYER_ROLELIST:
+                    }
+                    break;
+
+                case PlayerNet.PLAYER_STATE.E_WAIT_SELECT_ROLE:
                     {
                         if (mxPlayerNet.mxReciver.aCharList.Count > 0)
                         {
@@ -221,20 +265,31 @@ public class NFStart : MonoBehaviour
                                 if (GUI.Button(new Rect(200, i * 50, 150, 50), System.Text.Encoding.Default.GetString(xLiteInfo.noob_name)))
                                 {
                                     mxPlayerNet.strRoleName = System.Text.Encoding.Default.GetString(xLiteInfo.noob_name);
-                                    NFStart.Instance.GetPlayerNet().nMainRoleID = PlayerReciver.PBToNF(xLiteInfo.id);
+                                    GetPlayerNet().nMainRoleID = PlayerReciver.PBToNF(xLiteInfo.id);
+                                    GetPlayerNet().ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_WAITING_TO_GAME);
                                     mxPlayerNet.mxSender.RequireEnterGameServer(NFStart.Instance.GetPlayerNet().nMainRoleID, mxPlayerNet.strAccount, mxPlayerNet.strRoleName, mxPlayerNet.nServerID);
                                 }
                             }
-                            
                         }
                         else
                         {
                             mxPlayerNet.strRoleName = GUI.TextField(new Rect(10, 10, 150, 50), mxPlayerNet.strRoleName);
                             if (GUI.Button(new Rect(10, 200, 150, 50), "CreateRole"))
                             {
+                                GetPlayerNet().ChangePlayerState(PlayerNet.PLAYER_STATE.E_WAIT_CREATE_ROLE);
                                 mxPlayerNet.mxSender.RequireCreateRole(mxPlayerNet.strAccount, mxPlayerNet.strRoleName, 0, 0, mxPlayerNet.nServerID);
                             }
                         }
+                    }
+                    break;
+                case PlayerNet.PLAYER_STATE.E_WAIT_CREATE_ROLE:
+                    {
+                        // wait receive EGMI_ACK_ROLE_LIST ,  when receive msg, enter E_WAIT_SELECT_ROLE status;
+                    }
+                    break;
+                case PlayerNet.PLAYER_STATE.E_PLAYER_WAITING_TO_GAME:
+                    {
+                        // wait receive EGMI_ACK_SWAP_SCENE ,  when receive msg, enter E_PLAYER_GAMEING status;
                     }
                     break;
 
@@ -244,12 +299,28 @@ public class NFStart : MonoBehaviour
 
                 default:
                     break;
-
             }
         }
         else
-        {
-            mxPlayerNet = new PlayerNet();
+        {   
+            PlayerNet xPlayerNet = new PlayerNet();
+            xPlayerNet.mxNet.RegisteredConnectDelegation(OnConfigConnect);
+            SetFocusNet(xPlayerNet);
         }
+    }
+
+    public void OnConfigConnect()
+    {
+        mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_CONNET_NET_SUCESS_WAITING_ACCOUNT);
+    }
+
+    public void OnGateConnect()
+    {
+        mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_START_CONNECT_TO_GATE_SUCESS_FUL);
+    }
+
+    public void OnGateDisConnect()
+    {
+        mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_DISCOUNT);
     }
 }

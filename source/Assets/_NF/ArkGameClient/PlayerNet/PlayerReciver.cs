@@ -42,12 +42,10 @@ namespace PlayerNetClient
 
         public  void OnDisConnect()
         {
-            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_DISCOUNT;
         }
 
         public  void OnConnect()
         {
-            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_WAITING_PLAYER_LOGIN;
         }
 
 		public void Init() 
@@ -115,13 +113,7 @@ namespace PlayerNetClient
 
             if (EGameEventCode.EGEC_ACCOUNT_SUCCESS == xData.event_code)
             {
-                mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_HAS_PLAYER_LOGIN;
-
-                PlayerSender sender = mxPlayerNet.mxSender;
-                if (null != sender)
-                {
-                    sender.RequireWorldList();
-                }
+                mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_LOGIN_SUCCESSFUL);    
             }
         }
 
@@ -150,7 +142,7 @@ namespace PlayerNetClient
                 }
             }
 
-            NFCLogicEvent.Instance.DoEvent((int)ClientEventDefine.EVENTDEFINE_SHOWWORLDLIST, new NFCDataList());
+            mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_WORLD_LIST_SUCCESSFUL_WAITING_SELECT_WORLD);
         }
 
         private void EGMI_ACK_CONNECT_WORLD(MsgHead head, MemoryStream stream)
@@ -163,11 +155,10 @@ namespace PlayerNetClient
             NFMsg.AckConnectWorldResult xData = new NFMsg.AckConnectWorldResult();
             xData = Serializer.Deserialize<NFMsg.AckConnectWorldResult>(new MemoryStream(xMsg.msg_data));
 
-            ///
-            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_WAITING_PLAYER_TO_GATE;
             mxPlayerNet.strKey = System.Text.Encoding.Default.GetString(xData.world_key);
             mxPlayerNet.strWorldIP = System.Text.Encoding.Default.GetString(xData.world_ip);
             mxPlayerNet.nWorldPort = xData.world_port;
+            mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_GET_WORLD_KEY_SUCCESSFUL);
         }
 
         private void EGMI_ACK_CONNECT_KEY(MsgHead head, MemoryStream stream)
@@ -181,7 +172,7 @@ namespace PlayerNetClient
             if (xData.event_code == EGameEventCode.EGEC_VERIFY_KEY_SUCCESS)
             {
                 //验证成功
-                mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_HAS_VERIFY;
+                mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_VERIFY_KEY_SUCCESS_FULL);
                 mxPlayerNet.nMainRoleID = PBToNF(xData.event_object);
 
                 //申请世界内的服务器列表
@@ -226,21 +217,20 @@ namespace PlayerNetClient
                 aCharList.Add(info);
             }
 
-            if (PlayerNet.PLAYER_STATE.E_HAS_PLAYER_ROLELIST != mxPlayerNet.mPlayerState)
+            if (PlayerNet.PLAYER_STATE.E_WAIT_SELECT_ROLE != mxPlayerNet.GetPlayerState())
             {
-                //NFCRenderInterface.Instance.LoadScene("SelectScene");
 
                 NFCDataList varList = new NFCDataList();
                 varList.AddString("SelectScene");
                 NFCLogicEvent.Instance.DoEvent((int)ClientEventDefine.EventDefine_LoadSelectRole, varList);
             }
 
-            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_HAS_PLAYER_ROLELIST;
+            mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_GETROLELIST_SUCCESSFUL);
         }
 
         private void EGMI_ACK_SWAP_SCENE(MsgHead head, MemoryStream stream)
         {
-            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING;
+            mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING);
 
             NFMsg.MsgBase xMsg = new NFMsg.MsgBase();
             xMsg = Serializer.Deserialize<NFMsg.MsgBase>(stream);

@@ -45,14 +45,14 @@ namespace NFCoreEx
 
             XmlDocument xmldoc = new XmlDocument();
 
-            string strLogicPath = mstrRootPath + "NFDataCfg/Struct/LogicClass.xml";
+            string strLogicPath = mstrRootPath + "DataConfig/Struct/LogicClass.xml";
             if (File.Exists(strLogicPath))
             {
                 mbCepher = false;
             }
             else
             {
-                strLogicPath = mstrRootPath + "NFDataCfg/Struct/LogicClass.NF";
+                strLogicPath = mstrRootPath + "DataConfig/Struct/LogicClass.NF";
                 mbCepher = true;
             }
 

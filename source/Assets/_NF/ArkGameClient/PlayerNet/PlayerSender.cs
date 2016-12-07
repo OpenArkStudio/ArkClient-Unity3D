@@ -53,7 +53,7 @@ public class PlayerSender
     {
         if (mxPlayerNet.mbDebugMode)
         {
-            mxPlayerNet.mPlayerState = PlayerNet.PLAYER_STATE.E_HAS_PLAYER_ROLELIST;
+            mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_WAIT_SELECT_ROLE);
             //NFCRenderInterface.Instance.LoadScene("SelectScene");
         }
         else

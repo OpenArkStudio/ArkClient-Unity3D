@@ -93,18 +93,6 @@ public class NFCRenderInterface
         }
         
     }
-    public enum RecordBuildingList
-    {
-        BuildingID = 0,
-        BuildingGUID = 1,
-    }
-
-    /////////////////////////////////////////////////////////////////
-    private void OnBuildRecordEventHandler(NFIDENTID self, string strRecordName, NFIRecord.eRecordOptype eType, int nRow, int nCol, NFIDataList oldVar, NFIDataList newVar)
-    {
- 
-    }
-
    
     ///////////////////////////////////////////////////////////////////////////////////////
     Dictionary<NFIDENTID, GameObject> mhtObject = new Dictionary<NFIDENTID, GameObject>();

@@ -16,11 +16,6 @@ public class NFObjectElement
 	private Vector2 scrollPositionSecond = Vector2.zero;
 	private Vector2 scrollPositionThird = Vector2.zero;
 
-
-    /// <summary>
-    /// ///Gm
-    /// </summary>
-    /// 
     Vector2 scrollVecChatMsg = new Vector2();
     Vector2 scrollVecBtn = new Vector2();
     private string strReqSwapSceneID = "";
@@ -37,13 +32,9 @@ public class NFObjectElement
 	{
 		if (buttonLeft == null)
 		{
-	
 	        buttonLeft = GUI.skin.button;
-	
 	        buttonLeft.alignment = TextAnchor.MiddleLeft;
-	
 	    }
-
 		
 		int nElementWidth = 150;
 		int nElementHeight = 20;
@@ -62,7 +53,6 @@ public class NFObjectElement
 
         scrollPositionFirst = GUI.BeginScrollView(new Rect(0, nElementHeight, nElementWidth / 2 + 20, nHeight), scrollPositionFirst, new Rect(0, 0, nElementWidth, objectList.Count() * (nElementHeight)));
 
-
 		//all object
 		for (int i = 0; i < objectList.Count(); i++)
 		{
@@ -73,7 +63,6 @@ public class NFObjectElement
                 xTargetIdent = ident;
 				strTableName = "";
 			}
-			
 		}
 		
 		GUI.EndScrollView();
@@ -129,8 +118,6 @@ public class NFObjectElement
 			
 			///////////////////////////////
 			//all property 
-
-
             for (int k = 0; k < propertyList.Count(); k++)
             {
                 string strPropertyValue = null;
@@ -168,13 +155,10 @@ public class NFObjectElement
                     }
                     nElementIndex++;
                 }
-				
 			}
-			
 			
 			GUI.EndScrollView();
 			////////////////////////
-			
 			
 			if(strTableName.Length > 0)
 			{
@@ -186,11 +170,8 @@ public class NFObjectElement
 					int nOffest = 30;
 
                     scrollPositionThird = GUI.BeginScrollView(new Rect(nElementWidth * 1.5f + 40, nElementHeight, nElementWidth * 2, nHeight/2), scrollPositionThird, new Rect(0, 0, nElementWidth * nCol + nOffest, nRow * nElementHeight + nOffest));
-					
-						
-					string selString = null;
-					
-					
+
+                    string selString = null;
 					for(int row = 0; row < nRow; row++)
 					{
 						GUI.Button(new Rect(0, row*nElementHeight+nOffest, nOffest, nElementHeight), row.ToString());//row
@@ -229,7 +210,6 @@ public class NFObjectElement
 								default:
 									selString = "UnKnowType";
 									break;
-									
 								}
 							}
 							else
@@ -241,17 +221,13 @@ public class NFObjectElement
 							{
 								strInfo = "Row:" + row.ToString() + " Col:" + col.ToString() + " " + selString;
 							}
-			
 						}
 					}
 					
 					GUI.EndScrollView();
 				}				
 			}
-			
 		}
-		
-
 	}
 
     public void OnOpratorGUI(int nHeight, int nWidth)
@@ -262,7 +238,7 @@ public class NFObjectElement
             && null != NFStart.Instance.GetPlayerNet().mxNet
             && null != NFStart.Instance.GetPlayerNet().mxReciver
             && null != NFStart.Instance.GetPlayerNet().mxSender
-            && NFStart.Instance.GetPlayerNet().mPlayerState == PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING)
+            && NFStart.Instance.GetPlayerNet().GetPlayerState() == PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING)
         {
 
             ////ÁÄÌì
