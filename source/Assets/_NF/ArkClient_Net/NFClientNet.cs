@@ -218,9 +218,9 @@ namespace NFTCPClient
 	
     public class NFClientNet
     {
-        public NFNet net = null;
+        public NFCNet net = null;
 
-        public NFClientNet(NFNet xnet)
+        public NFClientNet(NFCNet xnet)
         {
             net = xnet;
             Init();

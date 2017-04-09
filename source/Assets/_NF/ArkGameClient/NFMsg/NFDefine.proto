@@ -3,8 +3,8 @@ package NFMsg;
 //所有的网络逻辑事件枚举都在这里 
 enum EGameEventCode
 {
-	EGEC_UNKOWN_ERROR							= 0;		// 未知错误
-	EGEC_SUCCESS								= 1;        // 操作成功
+	EGEC_SUCCESS								= 0;        // 操作成功
+	EGEC_UNKOWN_ERROR							= 1;		// 未知错误
 	EGEC_ACCOUNT_EXIST							= 2;        // 注册时账号在数据库中已存在
 	EGEC_ACCOUNTPWD_INVALID						= 3;        // 账号不存在或者密码错误
 	EGEC_ACCOUNT_USING							= 4;        // 账号正在使用
@@ -127,6 +127,7 @@ enum EGameMsgID
 	EGMI_ACK_PROPERTY_STRING					= 212;			// 属性变更
 	EGMI_ACK_PROPERTY_DOUBLE					= 213;			// 属性变更
 	EGMI_ACK_PROPERTY_OBJECT					= 214;			// 属性变更
+    EGMI_ACK_PROPERTY_POINT                     = 215;          // 属性变更
 
 	EGMI_ACK_ADD_ROW							= 220;
 	EGMI_ACK_REMOVE_ROW							= 221;
@@ -136,13 +137,14 @@ enum EGameMsgID
 	EGMI_ACK_RECORD_DOUBLE						= 225;
 	EGMI_ACK_RECORD_STRING						= 226;
 	EGMI_ACK_RECORD_OBJECT						= 227;
-	EGMI_ACK_RECORD_CLEAR						= 228;
-	EGMI_ACK_RECORD_SORT						= 229;
+    EGMI_ACK_RECORD_POINT                       = 228;
+	EGMI_ACK_RECORD_CLEAR						= 229;
+	EGMI_ACK_RECORD_SORT						= 230;
 
-	EGMI_REQ_MOVE								= 230;
-	EGMI_ACK_MOVE								= 231;
-	EGMI_REQ_MOVE_IMMUNE						= 232;
-	EGMI_ACK_MOVE_IMMUNE						= 233;
+	EGMI_REQ_MOVE								= 235;
+	EGMI_ACK_MOVE								= 236;
+	EGMI_REQ_MOVE_IMMUNE						= 237;
+	EGMI_ACK_MOVE_IMMUNE						= 238;
 
 	EGMI_REQ_SKILL_OBJECTX						= 240;
 	EGMI_ACK_SKILL_OBJECTX						= 241;
@@ -163,9 +165,15 @@ enum EGameMsgID
 	EGMI_REQ_ACCEPT_TASK						= 256;
 	EGMI_REQ_COMPELETE_TASK						= 257;
 	
-	EGMI_REQ_JOIN_PVP                           = 260; // 申请加入PVP队列
-	EGMI_REQ_EXIT_PVP                           = 261; // 申请/通知某角色离开PVP队列
+	EGMI_REQ_JOIN_PVP                           = 260; // 申请加入PVP
+	EGMI_REQ_EXIT_PVP                           = 261; // 申请离开PVP
 	EGMT_ACK_START_PVP                          = 262; // 通知开始PVP
+	
+	EGMI_REQ_SEARCH_OPPNENT                     = 280; // 查找对手(EBattleType)
+	EGMI_ACK_SEARCH_OPPNENT                     = 281; // 返回查找对手的信息(EBattleType)
+	EGMT_REQ_START_OPPNENT                      = 282; // 开始战斗(EBattleType)
+	EGMT_ACK_START_OPPNENT                      = 283; // 开始战斗(EBattleType)
+	
 	
 	EGMI_ACK_ONLINE_NOTIFY						= 290; // 玩家上线通知
 	EGMI_ACK_OFFLINE_NOTIFY						= 291; // 玩家下线通知
@@ -181,18 +189,115 @@ enum EGameMsgID
 	EGMI_REQ_SEARCH_GUILD                       = 308; // 申请搜索公会
 	EGMI_ACK_SEARCH_GUILD                       = 309; // 返回搜索公会	
 	
+	EGMI_REQ_OPR_GUILDINFO						= 310; // 申请公会操作 
+	EGMI_ACK_OPR_GUILDINFO						= 311; // 公会操作结果
+	
+	EGMI_REQ_GUILDECTYPEINFO					= 312; // 申请公会副本
+	EGMI_ACK_GUILDECTYPEINFO					= 313; // 工会副本的信息
+	
+	EGMI_SET_GUILDECTYPEINFO					= 314; // 设置工会副本的信息
+	
+	EGMI_ReqEnterGuildEctype					= 315; // 
+	
 	EGEC_REQ_CREATE_CHATGROUP					= 400;		 // 创建聊天ReqAckCreateChatGroup
 	EGEC_ACK_CREATE_CHATGROUP					= 401;		 // 创建聊天ReqAckCreateChatGroup
 	EGEC_REQ_JOIN_CHATGROUP						= 402;		 // 加入聊天ReqAckjoinChatGroup
 	EGEC_ACK_JOIN_CHATGROUP						= 403;		 // 加入聊天ReqAckjoinChatGroup
 	EGEC_REQ_LEAVE_CHATGROUP					= 404;		 // 离开聊天ReqAckQuitChatGroup
 	EGEC_ACK_LEAVE_CHATGROUP					= 405;		 // 离开聊天ReqAckQuitChatGroup
-	EGEC_REQ_SUBSCRIPTION_CHATGROUP				= 406;		 // 离开聊天ReqSubscriptionChatGroup
-	EGEC_REQ_CANCELSUBSCRIPTION_CHATGROUP		= 407;		 // 离开聊天ReqSubscriptionChatGroup
+	EGEC_REQ_SUBSCRIPTION_CHATGROUP				= 406;		 // 订阅聊天室ReqSubscriptionChatGroup
+	EGEC_REQ_CANCELSUBSCRIPTION_CHATGROUP		= 407;		 // 取消订阅聊天室ReqSubscriptionChatGroup
+	EGEC_REQ_INVITE_CHATGROUP					= 408;		 // 邀请进入聊天室
+	EGEC_ACK_INVITE_CHATGROUP					= 409;		 // 邀请进入聊天室
+	EGEC_REQ_KICK_CHATGROUP						= 410;		 // 踢出聊天室
+	EGEC_ACK_KICK_CHATGROUP						= 411;		 // 踢出聊天室
 	
+	EGEC_REQ_CHATGROUP_TO_TEAM					= 450;		 // 聊天室快速组队
+	EGEC_ACK_CHATGROUP_TO_TEAM					= 451;		 // 聊天室快速组队	
 	
+	EGEC_REQ_INTENSIFYLEVEL_TO_EQUIP			= 500;		 // 装备强化
+	EGEC_ACK_INTENSIFYLEVEL_TO_EQUIP			= 501;		 // 装备强化
 	
-	/////////////////////GM MSG/////////////////////////////////////
+	EGEC_REQ_HOLE_TO_EQUIP						= 502;		 // 装备打洞
+	EGEC_ACK_HOLE_TO_EQUIP						= 503;		 // 装备打洞
+	
+	EGEC_REQ_INLAYSTONE_TO_EQUIP				= 504;		 // 装备镶嵌
+	EGEC_ACK_INLAYSTONE_TO_EQUIP				= 505;		 // 装备镶嵌
+	
+	EGEC_REQ_ELEMENTLEVEL_TO_EQUIP				= 506;		 // 装备附魔
+	EGEC_ACK_ELEMENTLEVEL_TO_EQUIP				= 507;		 // 装备附魔
+
+	EGEC_REQ_SET_FIGHT_HERO						= 508;		 // 战斗武将
+	
+	EGEC_WEAR_EQUIP								= 509;		 // 装备创戴
+	EGEC_TAKEOFF_EQUIP							= 510;		 // 装备卸载
+
+	EGEC_REQ_MINING_TITLE						= 600;		 // 申请挖次矿（地块）
+	
+    EGEC_REQ_SEND_MAIL                          = 700; // 发送邮件
+    EGEC_REQ_DRAW_MAIL                          = 701; // 领取邮件中的奖励(包含道具或者钻石等非道具的东西)
+    EGEC_REQ_DELETE_MAIL                        = 702; // 删除邮件
+	
+	//对象clone
+	EGMI_ACK_CLONE_OBJECT_ENTRY						= 800;			// 有对象进入
+	EGMI_ACK_CLONE_OBJECT_LEAVE						= 801;			// 有对象出去
+	        
+	EGMI_ACK_CLONE_OBJECT_PROPERTY_ENTRY			= 802;			// 有对象属性进入
+	EGMI_ACK_CLONE_OBJECT_RECORD_ENTRY				= 803;			// 有对象表进入
+	       
+	EGMI_ACK_CLONE_PROPERTY_INT						= 810;			// 属性变更
+	EGMI_ACK_CLONE_PROPERTY_FLOAT					= 811;			// 属性变更
+	EGMI_ACK_CLONE_PROPERTY_STRING					= 812;			// 属性变更
+	EGMI_ACK_CLONE_PROPERTY_DOUBLE					= 813;			// 属性变更
+	EGMI_ACK_CLONE_PROPERTY_OBJECT					= 814;			// 属性变更
+            
+	EGMI_ACK_CLONE_ADD_ROW							= 820;
+	EGMI_ACK_CLONE_REMOVE_ROW						= 821;
+	EGMI_ACK_CLONE_SWAP_ROW							= 822;
+	EGMI_ACK_CLONE_RECORD_INT						= 823;
+	EGMI_ACK_CLONE_RECORD_FLOAT						= 824;
+	EGMI_ACK_CLONE_RECORD_DOUBLE					= 825;
+	EGMI_ACK_CLONE_RECORD_STRING					= 826;
+	EGMI_ACK_CLONE_RECORD_OBJECT					= 827;
+	EGMI_ACK_CLONE_RECORD_CLEAR						= 828;
+	EGMI_ACK_CLONE_RECORD_SORT						= 829;
+	
+	EGMI_REQSWICHSERVER								= 840;	// 申请转服
+	EGMI_ACKSWICHSERVER								= 841;	// 申请转服
+	
+	EGMI_REQ_CREATE_TEAM                       		= 860; 	// 申请创建队伍
+	EGMI_ACK_CREATE_TEAM							= 861; 	// 创建队伍结果
+	EGMI_REQ_JOIN_TEAM                         		= 862; 	// 申请加入队伍
+	EGMI_ACK_JOIN_TEAM								= 863; 	// 加入队伍结果
+	EGMI_REQ_LEAVE_TEAM                        		= 864; 	// 申请离开队伍
+	EGMI_ACK_LEAVE_TEAM								= 865; 	// 离开队伍结果 
+	EGMI_REQ_INVITE_TEAM							= 866; 	// 邀请加入队伍
+	EGMI_REQ_OPRMEMBER_TEAM							= 867; 	// 操作成员
+	EGMI_ACK_OPRMEMBER_TEAM							= 868; 	// 操作成员 
+	
+	EGMI_REQ_TEAM_ENTER_ECTYPE						= 869; 	// 组队进副本 
+	EGMI_ACK_TEAM_ENTER_ECTYPE						= 870; 	// 组队进副本
+
+	
+	/////////////////////MapModule/////////////////////////////////////
+	EGMI_REQ_MAP_GRID_INFO							= 900; 	// 申请查看地图格子信息
+	EGMI_ACK_MAP_GRID_INFO							= 901; 	// 返回查看格子地图	
+	EGMI_REQ_BIG_MAP_INFO							= 902; 	// 申请大地图信息
+	EGMI_ACK_BIG_MAP_INFO							= 903; 	// 返回大地图
+	
+	EGMI_REQ_HOLD_MAP_GRID						= 910; 	// 申请入驻
+	EGMI_ACK_HOLD_MAP_GRID						= 911; 	// 返回入驻结果
+	EGMI_REQ_LEAVE_MSG_MAP_GRID					= 912; 	// 申请留言
+	EGMI_ACK_LEAVE_MSG_MAP_GRID					= 913; 	// 返回留言结果
+	EGMI_REQ_GET_MAP_GRID_AWARD					= 914; 	// 申请领取地图奖励
+	EGMI_ACK_GET_MAP_GRID_AWARD					= 915; 	// 返回领取地图奖励
+	
+	EGMI_REQ_MAP_GRID_HUNTING					= 916; 	// 申请地图狩猎
+	EGMI_ACK_MAP_GRID_HUNTING					= 917; 	// 返回结果
+	EGMI_REQ_MAP_GRID_KING_WAR					= 918; 	// 申请地图争霸
+	EGMI_ACK_MAP_GRID_KING_WAR					= 919; 	// 返回结果
+    
+	/////////////////////GM MSG/////////////////////////////////////订阅
 	EGMI_REQ_CMD_PROPERTY_INT					= 1000;			// GM命令修改整形
 	EGMI_REQ_CMD_PROPERTY_STR					= 1001;			// GM命令修改修改字符串
 	EGMI_REQ_CMD_PROPERTY_OBJECT				= 1002;			// GM命令
@@ -201,6 +306,15 @@ enum EGameMsgID
 	EGMI_REQ_CMD_RECORD_STR						= 1005;			// GM命令修改修改表字符串
 	EGMI_REQ_CMD_RECORD_OBJECT					= 1006;			// GM命令修改
 	EGMI_REQ_CMD_RECORD_FLOAT					= 1007;			// GM命令修改
+	EGMI_REQ_CMD_NORMAL							= 1008;			// 其他GM修改
+	
+		
+	EGMI_REQ_PVPAPPLYMACTCH						= 1100; 	// 申请匹配pvp
+	EGMI_ACK_PVPAPPLYMACTCH						= 1101; 	// 申请匹配pvp
+	
+	EGMI_REQ_CREATEPVPECTYPE					= 1102; 	// 申请pvp副本
+	EGMI_ACK_CREATEPVPECTYPE					= 1103; 	// 返回pvp副本的信息，并拉人
+	
 	/////////////////////Base SLG MSG/////////////////////////////////////
 	EGMI_REQ_BUY_FORM_SHOP						= 10000;//申请从商店种植建筑
 	EGMI_ACK_BUY_FORM_SHOP						= 10001;//返回商店种植建筑结果
@@ -212,13 +326,89 @@ enum EGameMsgID
 	EGMI_REQ_BUILD_OPERATE						= 10103;//申请建筑操作
 }
 
-enum EAwardType
+/////////////////////////道具系统相关//////////////////////////////////////////////////////////////////////////
+enum EItemType
 {
-    AWARD_TYPE_NORMAL   = 0; // 普通类型(装备和物品)
-	AWARD_TYPE_HERO     = 1; // 英雄类型
-	// TODO
+    EIT_EQUIP   			= 0; // 装备
+	EIT_GEM   				= 1; // 宝石
+	EIT_ITEM   				= 2; // 消耗品
+	EIT_CARD   				= 3; // 卡牌
+	EIT_TOKEN	   			= 4; // 令牌
 }
 
+//装备子类型(归属类型)
+enum EGameEquipSubType
+{
+	EQUIPTYPE_WEAPON            = 0;    // 武器
+	EQUIPTYPE_HELMET            = 1;    // 头盔
+	EQUIPTYPE_ARMOR             = 2;    // 胸甲
+	EQUIPTYPE_WRIST             = 3;    // 护腕	
+	EQUIPTYPE_PANT              = 4;    // 裤子	
+	EQUIPTYPE_BOOT              = 5;   	// 靴子
+};
+
+//宝石子类型	
+enum EGameGemSubType
+{
+	EGGSTYPE_GEM_ATK           	= 0;    // 攻击宝石
+	EGGSTYPE_GEM_DEF           	= 1;    // 防御宝石
+	
+	EGGSTYPE_GEM_FIRE			= 3;    // 火宝石
+	EGGSTYPE_GEM_LIGHT			= 4;    // 雷宝石
+	EGGSTYPE_GEM_WIND           = 5;    // 风宝石
+	EGGSTYPE_GEM_ICE          	= 6;    // 冰冻宝石
+	EGGSTYPE_GEM_POISON         = 7;    // 毒宝石	
+	
+};
+
+
+enum EGameItemSubType
+{
+	EGIT_ITEM_WATER				= 0; 	// 圣水
+	EGIT_ITEM_DIAMOND			= 1;	// 钻石 
+	EGIT_ITEM_CURRENCY			= 2; 	// 金币
+	EGIT_ITEM_EXP				= 3; 	// EXP
+	EGIT_ITEM_HP				= 4;	// 生命药水
+	EGIT_ITEM_MP				= 5;	// 魔法药水
+	EGIT_ITEM_SP				= 6;	// 体力药水
+	EGIT_ITEM_PACK				= 7;	// 礼包
+};
+
+enum EGameCardSubType
+{
+	EGCST_STRENGTH 				= 1;//力量	
+	EGCST_AGILITY				= 2;//敏捷
+	EGCST_INTELLIGENCE			= 3;//智力
+};
+
+enum EGameTokenSubType
+{
+	EGTST_TOKEN_REBORN					= 0; 	// 重生道具(消耗此物品时得到某种待遇)
+	EGTST_TOKEN_POSITION				= 1;	// 移动位置(传送到新手村)(消耗此物品时得到某种待遇)
+	EGTST_TOKEN_BOUNTY   				= 2; 	// 赏金令
+	EGTST_TOKEN_ACTIVITY				= 3;	// 活动令牌
+};
+
+
+//道具时间类型
+enum EGameItemExpiredType
+{
+    EGIET_NONE = 0;               	// 永不过期类型
+    EGIET_USE_TIMES = 1;            // 使用次数, 变形魔杖,变0道具要消失(普通物品数量)
+    EGIET_REAL_TIME = 2;            // 真实的时间流逝(秒),适合时装,礼包,饰品(写死1天1周)
+    EGIET_END_INDEX = 3;
+};
+
+////////////掉落状态/////////////////////////////////////////////////////////////////////////////////////
+
+enum EDrawDropItemState
+{
+    E_DRAW_STATE_NONE   = 0; // 初始状态
+    E_DRAW_STATE_GAIN   = 1; // 可获得
+    E_DRAW_STATE_RECV   = 2; // 已领取
+};
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// 公会成员权限
 enum EGuildPowerType
 {
     GUILD_POWER_TYPE_NORMAL   			= 0; // 普通成员
@@ -251,3 +441,65 @@ enum ETaskType
     TASK_KILL_SOME_MONSTER_COUNT        = 9; // 杀死某个特定怪度多少只
     // TODO
 }
+
+// 战斗类型
+enum EBattleType
+{
+	BATTLE_SINGLE        = 0; // 主角单人打副本
+	BATTLE_PVE_TEAM      = 1; // 多人打副本
+}
+
+enum EShopType
+{
+	EST_BUILDING 	= 1;//建筑	
+	EST_GOLD		= 2;//金币
+	EST_DIAMOND		= 3;//钻石
+	EST_SP			= 4;//体力
+	EST_EQUIP		= 5;//装备
+	EST_GEM			= 6;//宝石
+	EST_Hero		= 7;//HeroCard
+	EST_Other		= 8;//杂货店
+}
+
+
+///////////////排行榜相关////////////////////////////////////////////////////////////////////////////////////
+
+enum ERankType
+{
+	ERT_PLAYER_LEVEL 			= 1;
+	ERT_FIGHT_VALUE				= 2;
+	ERT_PLAYER_MONEY			= 3;
+	ERT_GUILD_LEVEL				= 4;
+	ERT_GUILD_KINGSOURCE		= 5;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//NCPTypenpc的类型
+enum ENPCType
+{
+    ENPCTYPE_NORMAL	= 0;			  // 普通怪
+    ENPCTYPE_HERO 	= 1;              // 英雄
+    ENPCTYPE_TURRET = 2;              // 炮塔
+    
+};
+
+//PropertyType 属性的类型
+enum EPropertyType
+{
+	EPT_STRENGTH 			= 1;//力量	
+	EPT_AGILITY				= 2;//敏捷
+	EPT_INTELLIGENCE		= 3;//智力
+};
+
+//元素类型
+enum EGameElementType
+{	
+	EELEMENTTYPE_FIRE				= 0;    // 火
+	EELEMENTTYPE_LIGHT				= 1;    // 雷电
+	EELEMENTTYPE_WIND              	= 2;    // 风
+	EELEMENTTYPE_ICE          		= 3;    // 冰冻
+	EELEMENTTYPE_POISON          	= 4;    // 毒	
+};
+
+

@@ -40,10 +40,12 @@ namespace NFTCPClient
 
         public abstract void StartConnect(string strIP, int nPort);
         public abstract void SendMsg(int unMsgID, byte[] bodyByte);
+        public abstract void Update();
         public abstract void Disconnect();
         public abstract bool RegisteredDelegation(int eMsgID, MsgDelegation msgDelegate);
         public abstract bool RegisteredResultCodeDelegation(int eCode, ResultCodeDelegation msgDelegate);
         public abstract bool RegisteredDisConnectDelegation(OnDisConnectDelegation onDisConnectDelegate);
         public abstract bool RegisteredConnectDelegation(OnConnectDelegation onConnectDelegate);
+        public abstract bool DoResultCodeDelegation(int eCode);
     }
 }

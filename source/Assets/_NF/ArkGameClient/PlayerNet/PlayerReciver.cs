@@ -48,8 +48,12 @@ namespace PlayerNetClient
         {
         }
 
-		public void Init() 
+		public bool Init() 
 		{
+            if (null == mxPlayerNet.mxNet)
+            {
+                return false;
+            }
 
             mxPlayerNet.mxNet.RegisteredConnectDelegation(OnConnect);
             mxPlayerNet.mxNet.RegisteredDisConnectDelegation(OnDisConnect);
@@ -88,10 +92,10 @@ namespace PlayerNetClient
 
             mxPlayerNet.mxNet.RegisteredDelegation((int)NFMsg.EGameMsgID.EGMI_ACK_SKILL_OBJECTX, EGMI_ACK_SKILL_OBJECTX);
             mxPlayerNet.mxNet.RegisteredDelegation((int)NFMsg.EGameMsgID.EGMI_ACK_CHAT, EGMI_ACK_CHAT);
+
+            return true;
             
 		}
-
-
 
         private void EGMI_EVENT_RESULT(MsgHead head, MemoryStream stream)
         {
@@ -132,17 +136,30 @@ namespace PlayerNetClient
                     ServerInfo info = xData.info[i];
                     aWorldList.Add(info);
                 }
+                mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_WORLD_LIST_SUCCESSFUL_WAITING_SELECT_WORLD);
             }
             else if (ReqServerListType.RSLT_GAMES_ERVER == xData.type)
             {
+                ServerInfo info = null;
                 for (int i = 0; i < xData.info.Count; ++i)
                 {
-                    ServerInfo info = xData.info[i];
+                    info = xData.info[i];
                     aServerList.Add(info);
                 }
-            }
 
-            mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_WORLD_LIST_SUCCESSFUL_WAITING_SELECT_WORLD);
+                //mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_VERIFY_KEY_SUCCESS_FULL);
+
+                if(null != info)
+                {
+                    mxPlayerNet.nServerID = info.server_id;
+                    mxPlayerNet.mxSender.RequireSelectServer(info.server_id);
+                    mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_WAIT_ROLELIST);
+                }
+                else
+                {
+
+                }
+            }
         }
 
         private void EGMI_ACK_CONNECT_WORLD(MsgHead head, MemoryStream stream)
@@ -173,7 +190,6 @@ namespace PlayerNetClient
             {
                 //验证成功
                 mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_VERIFY_KEY_SUCCESS_FULL);
-                mxPlayerNet.nMainRoleID = PBToNF(xData.event_object);
 
                 //申请世界内的服务器列表
                 PlayerSender sender = mxPlayerNet.mxSender;
@@ -263,11 +279,11 @@ namespace PlayerNetClient
 
                 NFIDataList var = new NFCDataList();
                 var.AddString("X");
-                var.AddFloat(xInfo.x);
+                var.AddFloat(xInfo.pos.x);
                 var.AddString("Y");
-                var.AddFloat(xInfo.y);
+                var.AddFloat(xInfo.pos.y);
                 var.AddString("Z");
-                var.AddFloat(xInfo.z);
+                var.AddFloat(xInfo.pos.z);
                 NFIObject xGO = NFCKernel.Instance.CreateObject(PBToNF(xInfo.object_guid), xInfo.scene_id, 0, System.Text.Encoding.Default.GetString(xInfo.class_id), System.Text.Encoding.Default.GetString(xInfo.config_id), var);
                 if (null == xGO)
                 {
@@ -460,9 +476,9 @@ namespace PlayerNetClient
             NFIRecordManager recordManager = go.GetRecordManager();
             NFIRecord record = recordManager.GetRecord(System.Text.Encoding.Default.GetString(recordData.record_name));
 
-            for (int i = 0; i < recordData.property_list.Count; i++)
+            for (int i = 0; i < recordData.record_list.Count; i++)
             {
-                record.SetInt(recordData.property_list[i].row, recordData.property_list[i].col, (int)recordData.property_list[i].data);
+                record.SetInt(recordData.record_list[i].row, recordData.record_list[i].col, (int)recordData.record_list[i].data);
             }
 		}
 		
@@ -478,9 +494,9 @@ namespace PlayerNetClient
             NFIRecordManager recordManager = go.GetRecordManager();
             NFIRecord record = recordManager.GetRecord(System.Text.Encoding.Default.GetString(recordData.record_name));
 
-            for (int i = 0; i < recordData.property_list.Count; i++)
+            for (int i = 0; i < recordData.record_list.Count; i++)
             {
-                record.SetFloat(recordData.property_list[i].row, recordData.property_list[i].col, (float)recordData.property_list[i].data);
+                record.SetFloat(recordData.record_list[i].row, recordData.record_list[i].col, (float)recordData.record_list[i].data);
             }
 		}
 		
@@ -496,9 +512,9 @@ namespace PlayerNetClient
             NFIRecordManager recordManager = go.GetRecordManager();
             NFIRecord record = recordManager.GetRecord(System.Text.Encoding.Default.GetString(recordData.record_name));
 
-            for (int i = 0; i < recordData.property_list.Count; i++)
+            for (int i = 0; i < recordData.record_list.Count; i++)
             {
-                record.SetString(recordData.property_list[i].row, recordData.property_list[i].col, System.Text.Encoding.Default.GetString(recordData.property_list[i].data));
+                record.SetString(recordData.record_list[i].row, recordData.record_list[i].col, System.Text.Encoding.Default.GetString(recordData.record_list[i].data));
             }
 		}
 		
@@ -515,9 +531,9 @@ namespace PlayerNetClient
             NFIRecord record = recordManager.GetRecord(System.Text.Encoding.Default.GetString(recordData.record_name));
 
 
-            for (int i = 0; i < recordData.property_list.Count; i++)
+            for (int i = 0; i < recordData.record_list.Count; i++)
             {
-                record.SetObject(recordData.property_list[i].row, recordData.property_list[i].col, PBToNF(recordData.property_list[i].data));
+                record.SetObject(recordData.record_list[i].row, recordData.record_list[i].col, PBToNF(recordData.record_list[i].data));
             }
 		}
 		

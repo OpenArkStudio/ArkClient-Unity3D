@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 
-public class NFNet : NFINet
+public class NFCNet : NFINet
 {
     public NFClientNet mxClient = null;
     public ArrayList mReciveaMsgList = new ArrayList();
@@ -21,7 +21,7 @@ public class NFNet : NFINet
     OnConnectDelegation mxOnConnectDelegation;
     OnDisConnectDelegation mxOnDisConnectDelegation;
 
-    public NFNet()
+    public NFCNet()
     {
     }
 
@@ -29,6 +29,14 @@ public class NFNet : NFINet
     {
         mxClient = new NFClientNet(this);        
         mxClient.Connect(strIP, nPort);
+    }
+
+    public override void Update()
+    {
+        if (null != mxClient)
+        {
+            mxClient.Update();
+        }
     }
 
     public override void SendMsg(int unMsgID, byte[] bodyByte)
@@ -108,7 +116,7 @@ public class NFNet : NFINet
 
     }
 
-    public bool DoResultCodeDelegation(int eCode)
+    public override bool DoResultCodeDelegation(int eCode)
     {
         if (mhtEventDelegation.ContainsKey(eCode))
         {

@@ -100,12 +100,27 @@ public class NFStart : MonoBehaviour
 
     }
 
-    void OnDestroy()
+
+
+        void OnDestroy()
     {
 
         if (null != mxPlayerNet)
         {
             mxPlayerNet.mxNet.Disconnect();
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            bCommand = !bCommand;
+        }
+
+        if (null != GetPlayerNet() && null != GetPlayerNet().mxNet)
+        {
+              GetPlayerNet().mxNet.Update();
         }
     }
 
