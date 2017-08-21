@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using NFTCPClient;
+using AFTCPClient;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,21 +10,21 @@ using System.Threading;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
-using NFCoreEx;
-using NFMsg;
+using AFCoreEx;
+using AFMsg;
 using ProtoBuf;
 using PlayerNetClient;
 
-public class NFStart : MonoBehaviour
+public class AFStart : MonoBehaviour
 {
     //看开启多人模式还是单人模式
-    NFConfig mConfig = null;
+    AFConfig mConfig = null;
     PlayerNet mxPlayerNet = null;
     string strTargetIP = "";
     int nPort = 0;
     public bool bCommand = false;
     public bool bDebugMode = false;
-    public NFObjectElement  mxObjectElement = new NFObjectElement();
+    public AFObjectElement  mxObjectElement = new AFObjectElement();
 
     public Transform[] mTrans;
 
@@ -59,8 +59,8 @@ public class NFStart : MonoBehaviour
     }
 
     #region Instance
-    private static NFStart _Instance = null;
-    public static NFStart Instance
+    private static AFStart _Instance = null;
+    public static AFStart Instance
     {
         get
         {
@@ -90,13 +90,13 @@ public class NFStart : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        mConfig = new NFConfig();
+        mConfig = new AFConfig();
         mConfig.Load();
         mConfig.GetSelectServer(ref strTargetIP, ref nPort);
         String strConfigPath = mConfig.GetConfigPath();
 
-        NFCElementManager.Instance.Load(strConfigPath);
-        NFCRenderInterface.Instance.Init();
+        AFCElementManager.Instance.Load(strConfigPath);
+        AFCRenderInterface.Instance.Init();
 
     }
 
@@ -129,7 +129,7 @@ public class NFStart : MonoBehaviour
 
         if (null != GetPlayerNet() && mxPlayerNet.GetPlayerState() == PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING)
         {
-            mxObjectElement.OnGUI(NFCKernel.Instance, 1024, 768);
+            mxObjectElement.OnGUI(AFCKernel.Instance, 1024, 768);
             mxObjectElement.OnOpratorGUI(1024, 768);
         }
 
@@ -198,7 +198,7 @@ public class NFStart : MonoBehaviour
                             ServerInfo xInfo = (ServerInfo)mxPlayerNet.mxReciver.aWorldList[i];
                             if (GUI.Button(new Rect(10, i * nHeight, 150, nHeight), System.Text.Encoding.Default.GetString(xInfo.name)))
                             {
-                                NFStart.Instance.GetPlayerNet().nServerID = xInfo.server_id;
+                                AFStart.Instance.GetPlayerNet().nServerID = xInfo.server_id;
                                 mxPlayerNet.mxSender.RequireConnectWorld(xInfo.server_id);
                                 mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_SELECT_WORLD_WAIT_WORK_KEY);
                             }
@@ -207,10 +207,10 @@ public class NFStart : MonoBehaviour
                     break;
                 case PlayerNet.PLAYER_STATE.E_PLAYER_GET_WORLD_KEY_SUCCESSFUL:
                     {
-                        string strWorpdIP = NFStart.Instance.GetPlayerNet().strWorldIP;
-                        string strWorpdKey = NFStart.Instance.GetPlayerNet().strKey;
-                        string strAccount = NFStart.Instance.GetPlayerNet().strKey;
-                        int nPort = NFStart.Instance.GetPlayerNet().nWorldPort;
+                        string strWorpdIP = AFStart.Instance.GetPlayerNet().strWorldIP;
+                        string strWorpdKey = AFStart.Instance.GetPlayerNet().strKey;
+                        string strAccount = AFStart.Instance.GetPlayerNet().strKey;
+                        int nPort = AFStart.Instance.GetPlayerNet().nWorldPort;
 
                         PlayerNet xPlayerNet = new PlayerNet();
                         xPlayerNet.strWorldIP = strWorpdIP;
@@ -264,7 +264,7 @@ public class NFStart : MonoBehaviour
                     break;
                 case PlayerNet.PLAYER_STATE.E_GETROLELIST_SUCCESSFUL:
                     {
-                        //NFCRenderInterface.Instance.LoadScene("SelectScene");
+                        //AFCRenderInterface.Instance.LoadScene("SelectScene");
                         GetPlayerNet().ChangePlayerState(PlayerNet.PLAYER_STATE.E_WAIT_SELECT_ROLE);
 
                     }
@@ -276,13 +276,13 @@ public class NFStart : MonoBehaviour
                         {
                             for (int i = 0; i < mxPlayerNet.mxReciver.aCharList.Count; ++i)
                             {
-                                NFMsg.RoleLiteInfo xLiteInfo = (NFMsg.RoleLiteInfo)mxPlayerNet.mxReciver.aCharList[i];
+                                AFMsg.RoleLiteInfo xLiteInfo = (AFMsg.RoleLiteInfo)mxPlayerNet.mxReciver.aCharList[i];
                                 if (GUI.Button(new Rect(200, i * 50, 150, 50), System.Text.Encoding.Default.GetString(xLiteInfo.noob_name)))
                                 {
                                     mxPlayerNet.strRoleName = System.Text.Encoding.Default.GetString(xLiteInfo.noob_name);
-                                    GetPlayerNet().nMainRoleID = PlayerReciver.PBToNF(xLiteInfo.id);
+                                    GetPlayerNet().nMainRoleID = PlayerReciver.PBToAF(xLiteInfo.id);
                                     GetPlayerNet().ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_WAITING_TO_GAME);
-                                    mxPlayerNet.mxSender.RequireEnterGameServer(NFStart.Instance.GetPlayerNet().nMainRoleID, mxPlayerNet.strAccount, mxPlayerNet.strRoleName, mxPlayerNet.nServerID);
+                                    mxPlayerNet.mxSender.RequireEnterGameServer(AFStart.Instance.GetPlayerNet().nMainRoleID, mxPlayerNet.strAccount, mxPlayerNet.strRoleName, mxPlayerNet.nServerID);
                                 }
                             }
                         }
@@ -309,7 +309,7 @@ public class NFStart : MonoBehaviour
                     break;
 
                 case PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING:
-                    //NFCSectionManager.Instance.SetGameState(NFCSectionManager.UI_SECTION_STATE.UISS_GAMEING);
+                    //AFCSectionManager.Instance.SetGameState(AFCSectionManager.UI_SECTION_STATE.UISS_GAMEING);
                     break;
 
                 default:

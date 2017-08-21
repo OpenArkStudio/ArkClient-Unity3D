@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Collections;
-using NFTCPClient;
+using AFTCPClient;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Runtime.InteropServices;
 
-public class NFConfig
+public class AFConfig
 {
     private XmlDocument xmldoc = null;
     private XmlNode root = null;

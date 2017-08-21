@@ -1,13 +1,13 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using NFCoreEx;
+using AFCoreEx;
 using PlayerNetClient;
 
-public class NFObjectElement
+public class AFObjectElement
 {
 	
-	public NFIDENTID xTargetIdent = new NFIDENTID();
+	public AFIDENTID xTargetIdent = new AFIDENTID();
 	private string strTableName = "";
     private string strInfo = "";
     private string strCommand = "";
@@ -28,7 +28,7 @@ public class NFObjectElement
 
 
     GUIStyle buttonLeft;
-    public void OnGUI(NFIKernel kernel, int nHeight, int nWidth)
+    public void OnGUI(AFIKernel kernel, int nHeight, int nWidth)
 	{
 		if (buttonLeft == null)
 		{
@@ -49,16 +49,16 @@ public class NFObjectElement
         GUI.color = Color.white;
 
 
-        NFIDataList objectList = kernel.GetObjectList();
+        AFIDataList objectList = kernel.GetObjectList();
 
         scrollPositionFirst = GUI.BeginScrollView(new Rect(0, nElementHeight, nElementWidth / 2 + 20, nHeight), scrollPositionFirst, new Rect(0, 0, nElementWidth, objectList.Count() * (nElementHeight)));
 
 		//all object
 		for (int i = 0; i < objectList.Count(); i++)
 		{
-			NFIDENTID ident = objectList.ObjectVal(i);
+			AFIDENTID ident = objectList.ObjectVal(i);
 
-            if (GUI.Button(new Rect(0, i * nElementHeight, nElementWidth, nElementHeight), ident.nHead64.ToString()  + "_" + ident.nData64.ToString()))
+            if (GUI.Button(new Rect(0, i * nElementHeight, nElementWidth, nElementHeight), ident.nHead32.ToString()  + "_" + ident.nData32.ToString()))
 			{
                 xTargetIdent = ident;
 				strTableName = "";
@@ -70,11 +70,11 @@ public class NFObjectElement
 		////////////////
 		if(!xTargetIdent.IsNull())
 		{
-			NFIObject go = kernel.GetObject(xTargetIdent);
+			AFIObject go = kernel.GetObject(xTargetIdent);
 			
 			
-			NFIDataList recordLlist = go.GetRecordManager().GetRecordList();
-			NFIDataList propertyList = go.GetPropertyManager().GetPropertyList();
+			AFIDataList recordLlist = go.GetRecordManager().GetRecordList();
+			AFIDataList propertyList = go.GetPropertyManager().GetPropertyList();
 			
 			int nAllElement = 1;
 			for(int j = 0; j < recordLlist.Count(); j++)
@@ -97,7 +97,7 @@ public class NFObjectElement
             scrollPositionSecond = GUI.BeginScrollView(new Rect(nElementWidth / 2 + 20, nElementHeight, nElementWidth+20, nHeight/2), scrollPositionSecond, new Rect(0, 0, nElementWidth, (nAllElement+1) * (nElementHeight) + 1));
 
 			int nElementIndex = 0;
-			GUI.Button(new Rect(0, nElementIndex*nElementHeight, nElementWidth, nElementHeight), xTargetIdent.nData64.ToString());
+			GUI.Button(new Rect(0, nElementIndex*nElementHeight, nElementWidth, nElementHeight), xTargetIdent.nData32.ToString());
 			nElementIndex++;
 			//all record
 			for(int j = 0; j < recordLlist.Count(); j++)
@@ -122,23 +122,23 @@ public class NFObjectElement
             {
                 string strPropertyValue = null;
                 string strPropertyName = propertyList.StringVal(k);
-                NFIProperty property = go.GetPropertyManager().GetProperty(strPropertyName);
-                NFIDataList.VARIANT_TYPE eType = property.GetType();
+                AFIProperty property = go.GetPropertyManager().GetProperty(strPropertyName);
+                AFIDataList.VARIANT_TYPE eType = property.GetDataType();
                 switch (eType)
                 {
-                    case NFIDataList.VARIANT_TYPE.VTYPE_DOUBLE:
+                    case AFIDataList.VARIANT_TYPE.VTYPE_DOUBLE:
                         strPropertyValue = property.QueryDouble().ToString();
                         break;
-                    case NFIDataList.VARIANT_TYPE.VTYPE_FLOAT:
+                    case AFIDataList.VARIANT_TYPE.VTYPE_FLOAT:
                         strPropertyValue = property.QueryFloat().ToString();
                         break;
-                    case NFIDataList.VARIANT_TYPE.VTYPE_INT:
+                    case AFIDataList.VARIANT_TYPE.VTYPE_INT:
                         strPropertyValue = property.QueryInt().ToString();
                         break;
-                    case NFIDataList.VARIANT_TYPE.VTYPE_OBJECT:
-                        strPropertyValue = property.QueryObject().nData64.ToString();
+                    case AFIDataList.VARIANT_TYPE.VTYPE_OBJECT:
+                        strPropertyValue = property.QueryObject().nData32.ToString();
                         break;
-                    case NFIDataList.VARIANT_TYPE.VTYPE_STRING:
+                    case AFIDataList.VARIANT_TYPE.VTYPE_STRING:
                         strPropertyValue = property.QueryString();
                         break;
                     default:
@@ -162,7 +162,7 @@ public class NFObjectElement
 			
 			if(strTableName.Length > 0)
 			{
-				NFIRecord record = go.GetRecordManager().GetRecord(strTableName);
+				AFIRecord record = go.GetRecordManager().GetRecord(strTableName);
 				if(null != record)
 				{
 					int nRow = record.GetRows();
@@ -184,27 +184,27 @@ public class NFObjectElement
 							
 							if(record.IsUsed(row))
 							{
-								NFIDataList.VARIANT_TYPE eType = record.GetColType(col);
+								AFIDataList.VARIANT_TYPE eType = record.GetColType(col);
 								switch(eType)
 								{								
-								case NFIDataList.VARIANT_TYPE.VTYPE_INT:
+								case AFIDataList.VARIANT_TYPE.VTYPE_INT:
 									selString = record.QueryInt(row, col).ToString();
 									break;
 									
-								case NFIDataList.VARIANT_TYPE.VTYPE_FLOAT:
+								case AFIDataList.VARIANT_TYPE.VTYPE_FLOAT:
 									selString = record.QueryFloat(row, col).ToString();
 									break;
 									
-								case NFIDataList.VARIANT_TYPE.VTYPE_DOUBLE:
+								case AFIDataList.VARIANT_TYPE.VTYPE_DOUBLE:
 									selString = record.QueryDouble(row, col).ToString();
 									break;
 									
-								case NFIDataList.VARIANT_TYPE.VTYPE_STRING:
+								case AFIDataList.VARIANT_TYPE.VTYPE_STRING:
 									selString = record.QueryString(row, col).ToString();
 									break;
 									
-								case NFIDataList.VARIANT_TYPE.VTYPE_OBJECT:
-									selString = record.QueryObject(row, col).nData64.ToString();
+								case AFIDataList.VARIANT_TYPE.VTYPE_OBJECT:
+									selString = record.QueryObject(row, col).nData32.ToString();
 									break;
 									
 								default:
@@ -234,19 +234,19 @@ public class NFObjectElement
     {
         //////////////////////////////////
 
-        if (null != NFStart.Instance.GetPlayerNet()
-            && null != NFStart.Instance.GetPlayerNet().mxNet
-            && null != NFStart.Instance.GetPlayerNet().mxReciver
-            && null != NFStart.Instance.GetPlayerNet().mxSender
-            && NFStart.Instance.GetPlayerNet().GetPlayerState() == PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING)
+        if (null != AFStart.Instance.GetPlayerNet()
+            && null != AFStart.Instance.GetPlayerNet().mxNet
+            && null != AFStart.Instance.GetPlayerNet().mxReciver
+            && null != AFStart.Instance.GetPlayerNet().mxSender
+            && AFStart.Instance.GetPlayerNet().GetPlayerState() == PlayerNet.PLAYER_STATE.E_PLAYER_GAMEING)
         {
 
             ////ÁÄÌì
             scrollVecChatMsg = GUI.BeginScrollView(new Rect(0, nHeight / 2 + 20, 150 * 1.5f + 40, nHeight / 2 - 40), scrollVecChatMsg, new Rect(0, 0, 1500, 3000));
             int nChatIndex = 0;
-            for (int i = NFStart.Instance.GetPlayerNet().mxReciver.aChatMsgList.Count - 1; i >= 0 ; i--)
+            for (int i = AFStart.Instance.GetPlayerNet().mxReciver.aChatMsgList.Count - 1; i >= 0 ; i--)
             {
-                string strData = (string)NFStart.Instance.GetPlayerNet().mxReciver.aChatMsgList[i];
+                string strData = (string)AFStart.Instance.GetPlayerNet().mxReciver.aChatMsgList[i];
                 GUI.Label(new Rect(0, nChatIndex * 20, 2000, 20), strData);
                 nChatIndex++;
             }
@@ -261,14 +261,14 @@ public class NFObjectElement
 
             if (GUI.Button(new Rect(0, 0, 100, 50), "SwapScene"))
             {
-                NFStart.Instance.GetPlayerNet().mxSender.RequireSwapScene(NFStart.Instance.GetPlayerNet().nMainRoleID, 0, int.Parse(strReqSwapSceneID), -1);
+                AFStart.Instance.GetPlayerNet().mxSender.RequireSwapScene(AFStart.Instance.GetPlayerNet().nMainRoleID, 0, int.Parse(strReqSwapSceneID), -1);
             }
             strReqSwapSceneID = GUI.TextField(new Rect(100, 0, 100, 50), strReqSwapSceneID);
         
             ////////////////////////////////////////////////////////////////////////////////////////////////
             if (GUI.Button(new Rect(0, 50, 100, 50), "Move"))
             {
-                NFStart.Instance.GetPlayerNet().mxSender.RequireMove(NFStart.Instance.GetPlayerNet().nMainRoleID, float.Parse(strReqMoveX), float.Parse(strReqMoveY));
+                AFStart.Instance.GetPlayerNet().mxSender.RequireMove(AFStart.Instance.GetPlayerNet().nMainRoleID, float.Parse(strReqMoveX), float.Parse(strReqMoveY));
             }
             strReqMoveX = GUI.TextField(new Rect(100, 50, 100, 50), strReqMoveX);
             strReqMoveY = GUI.TextField(new Rect(200, 50, 100, 50), strReqMoveY);
@@ -278,9 +278,9 @@ public class NFObjectElement
 
             if (GUI.Button(new Rect(0, 450, 100, 50), "Chat"))
             {
-                NFStart.Instance.GetPlayerNet().mxSender.RequireChat(NFStart.Instance.GetPlayerNet().nMainRoleID, new NFCoreEx.NFIDENTID(), 3, strChatData);
+                AFStart.Instance.GetPlayerNet().mxSender.RequireChat(AFStart.Instance.GetPlayerNet().nMainRoleID, new AFCoreEx.AFIDENTID(), 3, strChatData);
             }
-            strChatTargetID = NFStart.Instance.GetPlayerNet().nTarget.ToString();
+            strChatTargetID = AFStart.Instance.GetPlayerNet().nTarget.ToString();
             strChatData = GUI.TextField(new Rect(100, 450, 100, 50), strChatData);
 
             strReqSwapServerID = GUI.TextField(new Rect(100, 500, 100, 50), strReqSwapServerID);
