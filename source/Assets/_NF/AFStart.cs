@@ -193,9 +193,9 @@ public class AFStart : MonoBehaviour
                         // show world list 
                         // wait user select world;
                         int nHeight = 50;
-                        for (int i = 0; i < mxPlayerNet.mxReciver.aWorldList.Count; ++i)
+                        for (int i = 0; i < mxPlayerNet.aWorldList.Count; ++i)
                         {
-                            ServerInfo xInfo = (ServerInfo)mxPlayerNet.mxReciver.aWorldList[i];
+                            ServerInfo xInfo = (ServerInfo)mxPlayerNet.aWorldList[i];
                             if (GUI.Button(new Rect(10, i * nHeight, 150, nHeight), System.Text.Encoding.Default.GetString(xInfo.name)))
                             {
                                 AFStart.Instance.GetPlayerNet().nServerID = xInfo.server_id;
@@ -242,9 +242,9 @@ public class AFStart : MonoBehaviour
                     {   
                         // wait user select server;
                         int nWidth = 200;
-                        for (int i = 0; i < mxPlayerNet.mxReciver.aServerList.Count; ++i)
+                        for (int i = 0; i < mxPlayerNet.aServerList.Count; ++i)
                         {
-                            ServerInfo xInfo = (ServerInfo)mxPlayerNet.mxReciver.aServerList[i];
+                            ServerInfo xInfo = (ServerInfo)mxPlayerNet.aServerList[i];
                             if (GUI.Button(new Rect(nWidth, i * 50, 150, 50), System.Text.Encoding.Default.GetString(xInfo.name)))
                             {
                                 GetPlayerNet().nServerID = xInfo.server_id;
@@ -272,11 +272,11 @@ public class AFStart : MonoBehaviour
 
                 case PlayerNet.PLAYER_STATE.E_WAIT_SELECT_ROLE:
                     {
-                        if (mxPlayerNet.mxReciver.aCharList.Count > 0)
+                        if (mxPlayerNet.aCharList.Count > 0)
                         {
-                            for (int i = 0; i < mxPlayerNet.mxReciver.aCharList.Count; ++i)
+                            for (int i = 0; i < mxPlayerNet.aCharList.Count; ++i)
                             {
-                                AFMsg.RoleLiteInfo xLiteInfo = (AFMsg.RoleLiteInfo)mxPlayerNet.mxReciver.aCharList[i];
+                                AFMsg.RoleLiteInfo xLiteInfo = (AFMsg.RoleLiteInfo)mxPlayerNet.aCharList[i];
                                 if (GUI.Button(new Rect(200, i * 50, 150, 50), System.Text.Encoding.Default.GetString(xLiteInfo.noob_name)))
                                 {
                                     mxPlayerNet.strRoleName = System.Text.Encoding.Default.GetString(xLiteInfo.noob_name);

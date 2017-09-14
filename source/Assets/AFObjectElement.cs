@@ -244,9 +244,9 @@ public class AFObjectElement
             ////ÁÄÌì
             scrollVecChatMsg = GUI.BeginScrollView(new Rect(0, nHeight / 2 + 20, 150 * 1.5f + 40, nHeight / 2 - 40), scrollVecChatMsg, new Rect(0, 0, 1500, 3000));
             int nChatIndex = 0;
-            for (int i = AFStart.Instance.GetPlayerNet().mxReciver.aChatMsgList.Count - 1; i >= 0 ; i--)
+            for (int i = AFStart.Instance.GetPlayerNet().aChatMsgList.Count - 1; i >= 0 ; i--)
             {
-                string strData = (string)AFStart.Instance.GetPlayerNet().mxReciver.aChatMsgList[i];
+                string strData = (string)AFStart.Instance.GetPlayerNet().aChatMsgList[i];
                 GUI.Label(new Rect(0, nChatIndex * 20, 2000, 20), strData);
                 nChatIndex++;
             }
