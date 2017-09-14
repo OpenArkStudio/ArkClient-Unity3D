@@ -1,4 +1,0 @@
-[submodule "source/Assets/_NF/ArkGameClient"]
-	path = source/Assets/_NF/ArkGameClient
-	url = https://github.com/ArkGame/ArkGameClient.git
-	branch = master
