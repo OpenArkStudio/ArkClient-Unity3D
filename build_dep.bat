@@ -14,9 +14,3 @@ git clone https://github.com/ArkGame/ArkGameClient.git
 cd ArkGameClient
 call build_dep.bat
 
-
-
-cd ..\..\
-REM ####################################################################################################
-REM back to root dir
-cd ..\
