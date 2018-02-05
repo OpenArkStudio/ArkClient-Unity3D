@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <XML>
-    <Propertys>
-        <Property Id="English" Type="string" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc=""/>
-        <Property Id="Chinese" Type="string" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc=""/>
-    </Propertys>
-    <Records/>
+    <DataNodes>
+        <DataNode Id="English" Type="string" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc=""/>
+        <DataNode Id="Chinese" Type="string" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc=""/>
+    </DataNodes>
+    <DataTables/>
     <Components/>
 </XML>

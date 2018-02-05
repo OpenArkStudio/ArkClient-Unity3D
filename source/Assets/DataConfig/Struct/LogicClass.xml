@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <XML>
     <Class Id="IObject" Type="TYPE_IOBJECT" Path="DataConfig/Struct/Class/IObject.xml" InstancePath="DataConfig/Ini/NPC/IObject.xml" Public="0" Desc="IObject">
-        <Class Id="BB_Build" Type="TYPE_BB_BUILD" Path="DataConfig/Struct/Class/BB_Build.xml" InstancePath="DataConfig/Ini/NPC/BB_Build.xml" Public="0" Desc="BB_Build"/>
-        <Class Id="Block" Type="TYPE_BLOCK" Path="DataConfig/Struct/Class/Block.xml" InstancePath="DataConfig/Ini/NPC/Block.xml" Public="0" Desc="Block"/>
         <Class Id="Buff" Type="TYPE_BUFF" Path="DataConfig/Struct/Class/Buff.xml" InstancePath="DataConfig/Ini/NPC/Buff.xml" Public="0" Desc="Buff"/>
         <Class Id="ChatGroup" Type="TYPE_CHATGROUP" Path="DataConfig/Struct/Class/ChatGroup.xml" InstancePath="DataConfig/Ini/NPC/ChatGroup.xml" Public="0" Desc="ChatGroup"/>
         <Class Id="ConsumeData" Type="TYPE_CONSUMEDATA" Path="DataConfig/Struct/Class/ConsumeData.xml" InstancePath="DataConfig/Ini/NPC/ConsumeData.xml" Public="0" Desc="ConsumeData"/>

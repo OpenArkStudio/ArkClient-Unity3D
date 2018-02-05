@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <XML>
-    <Propertys>
-        <Property Id="Job" Type="int" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="公会职位"/>
-        <Property Id="JobCount" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="公会职位人数"/>
-        <Property Id="Appoint" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="任命"/>
-        <Property Id="Fire" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="撤职"/>
-        <Property Id="Demise" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="禅让"/>
-        <Property Id="ApplyDismiss" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="申请解散军团"/>
-        <Property Id="StopDismiss" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="中止解散军团"/>
-        <Property Id="AcceptApply" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="收人"/>
-        <Property Id="DenyApply" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="拒收"/>
-        <Property Id="Kickout" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="开除"/>
-        <Property Id="SetRecruit" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="设置招募"/>
-        <Property Id="PublishRecruit" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="发布招募"/>
-        <Property Id="EditAD" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="编辑公告"/>
-        <Property Id="Leave" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="退团"/>
-        <Property Id="LevelUp" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="军团升级"/>
-    </Propertys>
-    <Records/>
+    <DataNodes>
+        <DataNode Id="Job" Type="int" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="公会职位"/>
+        <DataNode Id="JobCount" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="公会职位人数"/>
+        <DataNode Id="Appoint" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="任命"/>
+        <DataNode Id="Fire" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="撤职"/>
+        <DataNode Id="Demise" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="禅让"/>
+        <DataNode Id="ApplyDismiss" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="申请解散军团"/>
+        <DataNode Id="StopDismiss" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="中止解散军团"/>
+        <DataNode Id="AcceptApply" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="收人"/>
+        <DataNode Id="DenyApply" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="拒收"/>
+        <DataNode Id="Kickout" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="开除"/>
+        <DataNode Id="SetRecruit" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="设置招募"/>
+        <DataNode Id="PublishRecruit" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="发布招募"/>
+        <DataNode Id="EditAD" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="编辑公告"/>
+        <DataNode Id="Leave" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="退团"/>
+        <DataNode Id="LevelUp" Type="object" Public="0" Private="0" Save="0" Cache="0" Ref="0" Desc="军团升级"/>
+    </DataNodes>
+    <DataTables/>
     <Components/>
 </XML>

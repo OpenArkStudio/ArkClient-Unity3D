@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <XML>
-    <Propertys>
-        <Property Id="ID" Type="string" Public="0" Private="1" Save="0" Cache="0" Ref="0" Desc=""/>
-        <Property Id="ClassName" Type="string" Public="0" Private="1" Save="0" Cache="0" Ref="0" Desc=""/>
-        <Property Id="SceneID" Type="int" Public="0" Private="1" Save="0" Cache="0" Ref="0" Desc=""/>
-        <Property Id="GroupID" Type="int" Public="0" Private="1" Save="0" Cache="0" Ref="0" Desc="0全局广播"/>
-        <Property Id="ConfigID" Type="string" Public="0" Private="1" Save="0" Cache="0" Ref="0" Desc=""/>
-    </Propertys>
-    <Records/>
+    <DataNodes>
+        <DataNode Id="ID" Type="string" Public="0" Private="1" Save="0" Cache="0" Ref="0" Desc=""/>
+        <DataNode Id="ClassName" Type="string" Public="0" Private="1" Save="0" Cache="0" Ref="0" Desc=""/>
+        <DataNode Id="SceneID" Type="int" Public="0" Private="1" Save="0" Cache="0" Ref="0" Desc=""/>
+        <DataNode Id="GroupID" Type="int" Public="0" Private="1" Save="0" Cache="0" Ref="0" Desc="0全局广播"/>
+        <DataNode Id="ConfigID" Type="string" Public="0" Private="1" Save="0" Cache="0" Ref="0" Desc=""/>
+    </DataNodes>
+    <DataTables/>
     <Components/>
 </XML>
