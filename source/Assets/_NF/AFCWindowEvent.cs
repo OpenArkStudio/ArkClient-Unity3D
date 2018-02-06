@@ -73,70 +73,70 @@ public class AFCWindowEvent : MonoBehaviour
 
     void OnClick(GameObject go)
     {
-        switch (eControlType)
-        {
-            case WCHAT_CONTROL_ENUM.WCCE_STOP:
-                {
-                    //NFCWindowManager.Instance.HideWindows(NFCWindows.UI_WIN_STATE.UI_WIN_CHAT);
-                }
-                break;
-            case WCHAT_CONTROL_ENUM.WCCE_SEND_GLOBAL:
-                {
-                    GameObject xInput = (GameObject)mhtWindow[WCHAT_CONTROL_ENUM.WCCE_GLOBAL_INPUT];
-                    if (null != xInput)
-                    {
-                        InputField xUIData = xInput.GetComponent<InputField>();
-                        string strTalkData = xUIData.text;
+        //switch (eControlType)
+        //{
+        //    case WCHAT_CONTROL_ENUM.WCCE_STOP:
+        //        {
+        //            //NFCWindowManager.Instance.HideWindows(NFCWindows.UI_WIN_STATE.UI_WIN_CHAT);
+        //        }
+        //        break;
+        //    case WCHAT_CONTROL_ENUM.WCCE_SEND_GLOBAL:
+        //        {
+        //            GameObject xInput = (GameObject)mhtWindow[WCHAT_CONTROL_ENUM.WCCE_GLOBAL_INPUT];
+        //            if (null != xInput)
+        //            {
+        //                InputField xUIData = xInput.GetComponent<InputField>();
+        //                string strTalkData = xUIData.text;
 
-                        Chat(AFMsg.ReqAckPlayerChat.EGameChatType.EGCT_WORLD, strTalkData);
-                    }
-                }
-                break;
-            case WCHAT_CONTROL_ENUM.WCCE_SEND_GUILD:
-                {
-                    GameObject xInput = (GameObject)mhtWindow[WCHAT_CONTROL_ENUM.WCCE_GUILD_INPUT];
-                    if (null != xInput)
-                    {
-                        InputField xUIData = xInput.GetComponent<InputField>();
-                        string strTalkData = xUIData.text;
+        //                Chat(AFMsg.ReqAckPlayerChat.EGameChatType.EGCT_WORLD, strTalkData);
+        //            }
+        //        }
+        //        break;
+        //    case WCHAT_CONTROL_ENUM.WCCE_SEND_GUILD:
+        //        {
+        //            GameObject xInput = (GameObject)mhtWindow[WCHAT_CONTROL_ENUM.WCCE_GUILD_INPUT];
+        //            if (null != xInput)
+        //            {
+        //                InputField xUIData = xInput.GetComponent<InputField>();
+        //                string strTalkData = xUIData.text;
 
-                        Chat(AFMsg.ReqAckPlayerChat.EGameChatType.EGCT_GUILD, strTalkData);
-                    }
-                }
-                break;
-            case WCHAT_CONTROL_ENUM.WCCE_SEND_PRIVATE:
-                {
-                    GameObject xInput = (GameObject)mhtWindow[WCHAT_CONTROL_ENUM.WCCE_PRIVATE_INPUT];
-                    if (null != xInput)
-                    {
-                        InputField xUIData = xInput.GetComponent<InputField>();
-                        string strTalkData = xUIData.text;
+        //                Chat(AFMsg.ReqAckPlayerChat.EGameChatType.EGCT_GUILD, strTalkData);
+        //            }
+        //        }
+        //        break;
+        //    case WCHAT_CONTROL_ENUM.WCCE_SEND_PRIVATE:
+        //        {
+        //            GameObject xInput = (GameObject)mhtWindow[WCHAT_CONTROL_ENUM.WCCE_PRIVATE_INPUT];
+        //            if (null != xInput)
+        //            {
+        //                InputField xUIData = xInput.GetComponent<InputField>();
+        //                string strTalkData = xUIData.text;
 
-                        Chat(AFMsg.ReqAckPlayerChat.EGameChatType.EGCT_PRIVATE, strTalkData);
-                    }
-                }
-                break;
-            case WCHAT_CONTROL_ENUM.WCCE_SEND_TEAM:
-                {
-                    GameObject xInput = (GameObject)mhtWindow[WCHAT_CONTROL_ENUM.WCCE_TEAM_INPUT];
-                    if (null != xInput)
-                    {
-                        InputField xUIData = xInput.GetComponent<InputField>();
-                        string strTalkData = xUIData.text;
+        //                Chat(AFMsg.ReqAckPlayerChat.EGameChatType.EGCT_PRIVATE, strTalkData);
+        //            }
+        //        }
+        //        break;
+        //    case WCHAT_CONTROL_ENUM.WCCE_SEND_TEAM:
+        //        {
+        //            GameObject xInput = (GameObject)mhtWindow[WCHAT_CONTROL_ENUM.WCCE_TEAM_INPUT];
+        //            if (null != xInput)
+        //            {
+        //                InputField xUIData = xInput.GetComponent<InputField>();
+        //                string strTalkData = xUIData.text;
 
-                        Chat(AFMsg.ReqAckPlayerChat.EGameChatType.EGCT_TEAM, strTalkData);
-                    }
-                }
-                break;
-            default:
-                break;
-        }
+        //                Chat(AFMsg.ReqAckPlayerChat.EGameChatType.EGCT_TEAM, strTalkData);
+        //            }
+        //        }
+        //        break;
+        //    default:
+        //        break;
+        //}
 
     }
 
-    void Chat(AFMsg.ReqAckPlayerChat.EGameChatType eType, string strTalkData)
-    {
+    //void Chat(AFMsg.ReqAckPlayerChat.EGameChatType eType, string strTalkData)
+    //{
       
                    
-    }
+    //}
 }

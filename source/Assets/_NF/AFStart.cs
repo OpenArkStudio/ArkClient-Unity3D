@@ -12,7 +12,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using AFCoreEx;
 using AFMsg;
-using ProtoBuf;
+using Google.Protobuf;
 using PlayerNetClient;
 
 public class AFStart : MonoBehaviour
@@ -196,10 +196,10 @@ public class AFStart : MonoBehaviour
                         for (int i = 0; i < mxPlayerNet.aWorldList.Count; ++i)
                         {
                             ServerInfo xInfo = (ServerInfo)mxPlayerNet.aWorldList[i];
-                            if (GUI.Button(new Rect(10, i * nHeight, 150, nHeight), System.Text.Encoding.Default.GetString(xInfo.name)))
+                            if (GUI.Button(new Rect(10, i * nHeight, 150, nHeight), xInfo.Name))
                             {
-                                AFStart.Instance.GetPlayerNet().nServerID = xInfo.server_id;
-                                mxPlayerNet.mxSender.RequireConnectWorld(xInfo.server_id);
+                                AFStart.Instance.GetPlayerNet().nServerID = xInfo.ServerId;
+                                mxPlayerNet.mxSender.RequireConnectWorld(xInfo.ServerId);
                                 mxPlayerNet.ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_SELECT_WORLD_WAIT_WORK_KEY);
                             }
                         }
@@ -245,10 +245,10 @@ public class AFStart : MonoBehaviour
                         for (int i = 0; i < mxPlayerNet.aServerList.Count; ++i)
                         {
                             ServerInfo xInfo = (ServerInfo)mxPlayerNet.aServerList[i];
-                            if (GUI.Button(new Rect(nWidth, i * 50, 150, 50), System.Text.Encoding.Default.GetString(xInfo.name)))
+                            if (GUI.Button(new Rect(nWidth, i * 50, 150, 50), xInfo.Name))
                             {
-                                GetPlayerNet().nServerID = xInfo.server_id;
-                                GetFocusSender().RequireSelectServer(xInfo.server_id);
+                                GetPlayerNet().nServerID = xInfo.ServerId;
+                                GetFocusSender().RequireSelectServer(xInfo.ServerId);
                                 GetPlayerNet().ChangePlayerState(PlayerNet.PLAYER_STATE.E_WAIT_ROLELIST);
                             }
                         }
@@ -277,10 +277,10 @@ public class AFStart : MonoBehaviour
                             for (int i = 0; i < mxPlayerNet.aCharList.Count; ++i)
                             {
                                 AFMsg.RoleLiteInfo xLiteInfo = (AFMsg.RoleLiteInfo)mxPlayerNet.aCharList[i];
-                                if (GUI.Button(new Rect(200, i * 50, 150, 50), System.Text.Encoding.Default.GetString(xLiteInfo.noob_name)))
+                                if (GUI.Button(new Rect(200, i * 50, 150, 50), xLiteInfo.NoobName))
                                 {
-                                    mxPlayerNet.strRoleName = System.Text.Encoding.Default.GetString(xLiteInfo.noob_name);
-                                    GetPlayerNet().nMainRoleID = PlayerReciver.PBToAF(xLiteInfo.id);
+                                    mxPlayerNet.strRoleName = xLiteInfo.NoobName;
+                                    GetPlayerNet().nMainRoleID = PlayerReciver.PBToAF(xLiteInfo.Id);
                                     GetPlayerNet().ChangePlayerState(PlayerNet.PLAYER_STATE.E_PLAYER_WAITING_TO_GAME);
                                     mxPlayerNet.mxSender.RequireEnterGameServer(AFStart.Instance.GetPlayerNet().nMainRoleID, mxPlayerNet.strAccount, mxPlayerNet.strRoleName, mxPlayerNet.nServerID);
                                 }
